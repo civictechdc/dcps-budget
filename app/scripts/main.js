@@ -6,7 +6,7 @@
     'use strict';
 
     var app,
-        charts,
+        views,
 
         DATA_PATH = 'data/data.csv',
 
@@ -18,8 +18,8 @@
         d3.csv(DATA_PATH, function (d) {
             return {
                 name: d.SCHOOLNAME,
-                code: d.SCHOOLCODE,
-                ward: d.WARD === '' ? null : d.WARD,
+                code: '0' + d.SCHOOLCODE,
+                ward: d.WARD === '' ? null : +d.WARD,
                 enrollment: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
                 atRiskCount: d.ATRISKCOUNT === '' ? null : +d.ATRISKCOUNT,
                 atRiskFunds: d.ATRISKTOTAL === '' ? null : +d.ATRISKTOTAL
@@ -28,34 +28,44 @@
     });
 
     app = {
-        globals: {},
-
         initialize: function (data) {
             $('#loading').fadeOut();
             $('#main').fadeIn();
 
             app.data = _.filter(data, 'atRiskCount');
-            app.filteredData = app.data;
+            app.filterData({});
 
             app.loadView('Bubbles');
 
             $(window).resize(function () { app.view.resize(); });
         },
 
-        loadView: function (view) {
-            $('#exhibit').empty();
-            app.view = new charts[view](app.filteredData);
+        filterData: function (filter) {
+            var data = _(app.data).forEach(function (school) {
+                school.filtered = false;
+            });
+
+            if (!_.isEmpty(filter)) {
+                data.reject(filter).forEach(function (school) {
+                    school.filtered = true;
+                });
+            }
+
+            if (app.view) { app.view.refresh(); }
         },
 
-        refreshView: function () {
-            app.view.refresh();
+        loadView: function (view) {
+            $('#exhibit').empty();
+            app.view = new views[view](app.data);
         }
     };
 
-    charts = {};
+    window.app = app;
 
-    charts.Bubbles = function (data) {
-        this.margin = {top: 20, right: 15, bottom: 30, left: 60};
+    views = {};
+
+    views.Bubbles = function (data) {
+        this.margin = {top: 120, right: 20, bottom: 40, left: 60};
         this.data = data;
         this.$el = $('#exhibit');
 
@@ -68,14 +78,17 @@
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
         this.bg = this.g.append('g');
+        this.fg = this.g.append('g');
+        this.interactionLayer = this.g.append('g');
 
         this.resize();
     };
 
-    charts.Bubbles.prototype.resize = function () {
+    views.Bubbles.prototype.resize = function () {
         var xAxis, yAxis,
             width = this.$el.width() - this.margin.left - this.margin.right,
-            height = this.$el.height() - this.margin.top - this.margin.bottom;
+            height = this.$el.height() - this.margin.top - this.margin.bottom,
+            that = this;
 
         this.svg
             .attr("width", width + this.margin.left + this.margin.right)
@@ -96,6 +109,12 @@
             .tickFormat(function (d) { return '$' + commasFormatter(d / 1000) + 'K'; })
             .tickSize(-width - 20)
             .orient("left");
+
+        this.voronoi = d3.geom.voronoi()
+            .x(function (d) { return that.x(d.atRiskCount); })
+            .y(function (d) { return d.atRiskFunds > MAX ? -10 : that.y(d.atRiskFunds); })
+            .clipExtent([[-20, -20],
+                [width + 20, height + 20]]);
 
         this.bg.selectAll('.axis').remove();
         this.bg.selectAll('.guide').remove();
@@ -134,15 +153,16 @@
         this.refresh();
     };
 
-    charts.Bubbles.prototype.refresh = function () {
+    views.Bubbles.prototype.refresh = function () {
         var bubbles,
+            voronoiPaths,
             that = this;
 
-        bubbles = this.g.selectAll('.bubble')
+        bubbles = this.fg.selectAll('.bubble')
             .data(this.data);
 
         bubbles.enter().append('circle')
-            .attr('class', 'bubble')
+            .attr('class', function (d) { return 'bubble school-' + d.code; })
             .attr('r', 6)
             .attr('cy', this.y(0));
 
@@ -151,9 +171,42 @@
             .ease('elastic')
             .duration(900)
             .delay(function (d) { return d.atRiskCount / 2 + Math.random() * 300; })
-            .attr('cy', function (d) { return that.y(d.atRiskFunds > MAX ? MAX + 40000 : d.atRiskFunds); });
+            .each('start', function () { d3.select(this).classed('disabled', function (d) { return d.filtered; }); })
+            .attr('r', function (d) { return d.filtered ? 3 : 6; })
+            .attr('cy', function (d) { return d.atRiskFunds > MAX ? -10 : that.y(d.atRiskFunds); });
 
         bubbles.exit().remove();
+
+        voronoiPaths = this.interactionLayer.selectAll('.voronoi')
+            .data(this.voronoi(_.reject(this.data, 'filtered')));
+
+        voronoiPaths.enter().append('path')
+            .attr('class', 'voronoi')
+            .on("mouseover", function (d) { that.mouseover(d); })
+            .on("mouseout", function (d) { that.mouseout(d); });
+
+        voronoiPaths.attr("d", function (d) { return "M" + d.join("L") + "Z"; })
+            .datum(function (d) { return d.point; });
+
+        voronoiPaths.exit().remove();
+    };
+
+    views.Bubbles.prototype.mouseover = function (d) {
+        this.fg.select('.bubble.school-' + d.code)
+            .classed('highlighted', true)
+            .transition()
+            .ease('elastic')
+            .duration(900)
+            .attr('r', 18);
+    };
+
+    views.Bubbles.prototype.mouseout = function (d) {
+        this.fg.select('.bubble.school-' + d.code)
+            .classed('highlighted', false)
+            .transition()
+            .ease('elastic')
+            .duration(900)
+            .attr('r', 6);
     };
 
 }());

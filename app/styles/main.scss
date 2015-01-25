@@ -41,16 +41,17 @@ strong {
 }
 
 #loading {
-  display: none;
   position: absolute;
   left: 33.33%; top: 50%;
   margin: -125px 0 0 -107px;
   width: 320px; height: 250px;
   padding: 0 15px;
   text-align: left;
+  color: #fff;
 }
 
 #main {
+  display: none;
   position: relative;
   padding-bottom: 92px;
 
@@ -103,11 +104,22 @@ header {
   }
 
   circle.bubble {
-    fill: #d9c13f;
+    fill: #afab6e;
     fill: rgba(217,193,63,.5);
     stroke: #d9c13f;
     stroke-width: 1px;
     z-index: 10;
+    &.highlighted {
+      fill: #d9c13f;
+    }
+    &.disabled {
+      opacity: .25;
+    }
+  }
+
+  path.voronoi {
+    fill: none;
+    pointer-events: all;
   }
 }
 
