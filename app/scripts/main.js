@@ -39,7 +39,7 @@
 
             app.loadView('Bubbles');
 
-            $(window).resize(function () { app.view.resize() });
+            $(window).resize(function () { app.view.resize(); });
         },
 
         loadView: function (view) {
@@ -55,7 +55,7 @@
     charts = {};
 
     charts.Bubbles = function (data) {
-        this.margin = {top: 20, right: 35, bottom: 30, left: 90};
+        this.margin = {top: 20, right: 15, bottom: 30, left: 60};
         this.data = data;
         this.$el = $('#exhibit');
 
@@ -87,14 +87,14 @@
         xAxis = d3.svg.axis()
             .scale(this.x)
             .ticks(width > 800 ? 12 : 6)
-            .tickSize(-height - 10)
+            .tickSize(-height - 20)
             .orient("bottom");
 
         yAxis = d3.svg.axis()
             .scale(this.y)
             .tickValues([0, 250000, 500000, 750000, 1000000, 1250000, 1500000])
             .tickFormat(function (d) { return '$' + commasFormatter(d / 1000) + 'K'; })
-            .tickSize(-width - 10)
+            .tickSize(-width - 20)
             .orient("left");
 
         this.bg.selectAll('.axis').remove();
@@ -106,7 +106,7 @@
             .call(xAxis)
             .append("text")
                 .attr("class", "label")
-                .attr("x", width - 6)
+                .attr("x", width - 5)
                 .attr("y", -16)
                 .style("text-anchor", "end")
                 .text("# of At-Risk Students");
@@ -118,7 +118,7 @@
             .append("text")
                 .attr("class", "label")
                 .attr("transform", "rotate(-90)")
-                .attr("x", -6)
+                .attr("x", -4)
                 .attr("y", 16)
                 .attr("dy", ".71em")
                 .style("text-anchor", "end")
@@ -143,9 +143,14 @@
 
         bubbles.enter().append('circle')
             .attr('class', 'bubble')
-            .attr('r', 6);
+            .attr('r', 6)
+            .attr('cy', this.y(0));
 
         bubbles.attr('cx', function (d) { return that.x(d.atRiskCount); })
+            .transition()
+            .ease('elastic')
+            .duration(900)
+            .delay(function (d) { return d.atRiskCount / 2 + Math.random() * 300; })
             .attr('cy', function (d) { return that.y(d.atRiskFunds > MAX ? MAX + 40000 : d.atRiskFunds); });
 
         bubbles.exit().remove();
