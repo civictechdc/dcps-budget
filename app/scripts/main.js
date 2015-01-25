@@ -20,6 +20,7 @@
                 name: d.SCHOOLNAME,
                 code: '0' + d.SCHOOLCODE,
                 ward: d.WARD === '' ? null : d.WARD,
+                level: d.LEVEL === '' ? null : d.LEVEL,
                 enrollment: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
                 atRiskCount: d.ATRISKCOUNT === '' ? null : +d.ATRISKCOUNT,
                 atRiskFunds: d.ATRISKTOTAL === '' ? null : +d.ATRISKTOTAL
