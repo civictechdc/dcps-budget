@@ -1,0 +1,177 @@
+// bower:scss
+// endbower
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  background: #85959e;
+  color: #1a1e20;
+  font-family: 'Lato', Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.5em;
+}
+
+button {
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1, h2, h3 {
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+h1 {
+  font-size: 42px;
+  letter-spacing: 5px;
+  line-height: 1.1em
+}
+
+strong {
+  font-weight: 900;
+}
+
+#loading {
+  display: none;
+  position: absolute;
+  left: 33.33%; top: 50%;
+  margin: -125px 0 0 -107px;
+  width: 320px; height: 250px;
+  padding: 0 15px;
+  text-align: left;
+}
+
+#main {
+  position: relative;
+  padding-bottom: 92px;
+
+  #description {
+    clear: both;
+  }
+
+  #notes {
+    position: absolute;
+    bottom: 0;
+    font-size: 12px;
+    line-height: 1.2em;
+    padding: 0 30px;
+    color: #999;
+    a { text-decoration: underline; }
+  }
+}
+
+header {
+  text-align: center;
+}
+
+#exhibit {
+  height: 400px;
+}
+
+.bubble.chart {
+
+  .axis path {
+    fill: none;
+  }
+  .axis line {
+    stroke: #a6b1b7;
+  }
+  .axis text {
+    fill: #fff;
+    font-size: 11px;
+    font-weight: 300;
+    &.label {
+      font-size: 14px;
+      font-weight: 900;
+    }
+  }
+
+  line.guide {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2px;
+    stroke-linecap: round;
+  }
+
+  circle.bubble {
+    fill: #d9c13f;
+    fill: rgba(217,193,63,.5);
+    stroke: #d9c13f;
+    stroke-width: 1px;
+    z-index: 10;
+  }
+}
+
+/* Modified version of SpinKit */
+/* https://github.com/tobiasahlin/SpinKit */
+/* Copyright (c) 2014 Tobias Ahlin */
+/* MIT license */
+
+.spinner {
+  display: inline-block;
+  height: 30px;
+  text-align: center;
+  font-size: 10px;
+
+  & > div {
+    background-color: #ddd;
+    height: 100%;
+    width: 3px;
+    display: inline-block;
+    border-radius: 3px;
+    
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+  }
+
+  .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+  }
+
+  .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+  }
+
+  .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+  }
+
+  .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+  }
+}
+
+@-webkit-keyframes stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }  
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes stretchdelay {
+  0%, 40%, 100% { 
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% { 
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
