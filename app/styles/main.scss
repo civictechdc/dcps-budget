@@ -36,6 +36,10 @@ h1 {
   line-height: 1.1em
 }
 
+p {
+  font-size: 14px;
+}
+
 strong {
   font-weight: 900;
 }
@@ -76,6 +80,7 @@ header {
 
 #exhibit {
   height: 400px;
+  margin-bottom: -80px;
   overflow: hidden;
 }
 

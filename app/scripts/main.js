@@ -12,13 +12,14 @@
 
         MAX = 1500000,
 
-        commasFormatter = d3.format(",.0f");
+        commasFormatter = d3.format(",.0f"),
+        schoolCodeFormatter = d3.format("04d");
 
     $(function () {
         d3.csv(DATA_PATH, function (d) {
             return {
                 name: d.SCHOOLNAME,
-                code: '0' + d.SCHOOLCODE,
+                code: schoolCodeFormatter(d.SCHOOLCODE),
                 ward: d.WARD === '' ? null : d.WARD,
                 level: d.LEVEL === '' ? null : d.LEVEL,
                 enrollment: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
@@ -215,6 +216,16 @@
             .ease('elastic')
             .duration(900)
             .attr('r', 18);
+
+        $('#description .template h3').text(d.name);
+        $('#enrollment').text(d.enrollment);
+        $('#atriskcount').text(d.atRiskCount);
+        $('#atriskpercent').text((d.atRiskCount / d.enrollment * 100).toFixed(1));
+        $('#atriskfunds').text('$' + commasFormatter(d.atRiskFunds));
+        $('#perstudentfunds').text('$' + commasFormatter(d.atRiskFunds / d.atRiskCount));
+
+        $('#description .placeholder').hide();
+        $('#description .template').show();
     };
 
     views.Bubbles.prototype.mouseout = function (d) {
@@ -224,6 +235,9 @@
             .ease('elastic')
             .duration(900)
             .attr('r', 6);
+
+        $('#description .placeholder').show();
+        $('#description .template').hide();
     };
 
 }());
