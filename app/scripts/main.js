@@ -19,7 +19,7 @@
             return {
                 name: d.SCHOOLNAME,
                 code: '0' + d.SCHOOLCODE,
-                ward: d.WARD === '' ? null : +d.WARD,
+                ward: d.WARD === '' ? null : d.WARD,
                 enrollment: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
                 atRiskCount: d.ATRISKCOUNT === '' ? null : +d.ATRISKCOUNT,
                 atRiskFunds: d.ATRISKTOTAL === '' ? null : +d.ATRISKTOTAL
@@ -38,6 +38,22 @@
             app.loadView('Bubbles');
 
             $(window).resize(function () { app.view.resize(); });
+
+            $('#views').change(function (e) {
+                app.loadView($(e.target).attr('value'));
+            });
+
+            $('#filters').change(function () {
+                var filter = {};
+                $('#filters input:checked').each(function () {
+                    var $el = $(this),
+                        value = $el.attr('value');
+
+                    if (value) { filter[$el.attr('name')] = value; }
+                });
+
+                app.filterData(filter);
+            });
         },
 
         filterData: function (filter) {
@@ -72,9 +88,9 @@
         this.x = d3.scale.linear().domain([0, 600]);
         this.y = d3.scale.linear().domain([0, MAX]);
 
-        this.svg = d3.select('#exhibit').append('svg');
+        this.svg = d3.select('#exhibit').append('svg')
+            .attr("class", "bubble chart");
         this.g = this.svg.append('g')
-            .attr("class", "bubble chart")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
         this.bg = this.g.append('g');

@@ -40,7 +40,45 @@
       <header>
         <h1>At-Risk Funds</h1>
       </header>
-      <div id="controls"></div>
+      <div id="controls">
+        <form id="views">
+          <input type="radio" name="view" id="view-bubbles" value="Bubbles" checked="checked" />
+          <label for="view-bubbles">Scatterplot</label>
+          <!-- <input type="radio" name="view" id="view-bars" value="Bars" />
+          <label for="view-bars">Bar Chart</label> -->
+        </form>
+        <form id="filters">
+          <strong>Ward: </strong>
+          <input type="radio" name="ward" id="ward-all" checked="checked" />
+          <label for="ward-all">All</label>
+          <input type="radio" name="ward" id="ward-1" value="1" />
+          <label for="ward-1">1</label>
+          <input type="radio" name="ward" id="ward-2" value="2" />
+          <label for="ward-2">2</label>
+          <input type="radio" name="ward" id="ward-3" value="3" />
+          <label for="ward-3">3</label>
+          <input type="radio" name="ward" id="ward-4" value="4" />
+          <label for="ward-4">4</label>
+          <input type="radio" name="ward" id="ward-5" value="5" />
+          <label for="ward-5">5</label>
+          <input type="radio" name="ward" id="ward-6" value="6" />
+          <label for="ward-6">6</label>
+          <input type="radio" name="ward" id="ward-7" value="7" />
+          <label for="ward-7">7</label>
+          <input type="radio" name="ward" id="ward-8" value="8" />
+          <label for="ward-8">8</label>
+          <br />
+          <strong>Level: </strong>
+          <input type="radio" name="level" id="level-all" checked="checked" />
+          <label for="level-all">All</label>
+          <input type="radio" name="level" id="level-es" value="es" />
+          <label for="level-es">Elementary</label>
+          <input type="radio" name="level" id="level-ms" value="ms" />
+          <label for="level-ms">Middle</label>
+          <input type="radio" name="level" id="level-hs" value="hs" />
+          <label for="level-hs">High</label>
+        </form>
+      </div>
       <div id="exhibit"></div>
     </div>
 

@@ -76,9 +76,11 @@ header {
 
 #exhibit {
   height: 400px;
+  overflow: hidden;
 }
 
 .bubble.chart {
+  margin-top: -80px;
 
   .axis path {
     fill: none;
@@ -108,7 +110,11 @@ header {
     fill: rgba(217,193,63,.5);
     stroke: #d9c13f;
     stroke-width: 1px;
-    z-index: 10;
+    -webkit-transition: opacity 300ms;
+    -moz-transition: opacity 300ms;
+    -ms-transition: opacity 300ms;
+    -o-transition: opacity 300ms;
+    transition: opacity 300ms;
     &.highlighted {
       fill: #d9c13f;
     }
