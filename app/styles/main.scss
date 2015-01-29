@@ -32,10 +32,6 @@ h1 {
   line-height: 1.1em
 }
 
-p {
-  font-size: 14px;
-}
-
 strong {
   font-weight: 900;
 }
@@ -81,6 +77,7 @@ form {
 input[type="radio"] {
   display: none;
   & + label {
+    white-space: nowrap;
     padding: 3px 11px;
     margin: 0 1px;
     background: #75858e;
@@ -149,6 +146,53 @@ input[type="radio"] {
     fill: none;
     pointer-events: all;
   }
+}
+
+.tooltip {
+  display: none;
+  width: 420px;
+  position: absolute;
+  background: #55656e;
+  color: #fff;
+  padding: 11px 15px;
+  border-radius: 15px;
+  border: 3px solid #d9c13f;
+  font-size: 13px;
+  h3 {
+    font-size: 21px;
+    margin: 0 0 11px 0;
+  }
+  p {
+    margin: 0;
+    &.instruction {
+      margin-top: 7px;
+      font-weight: 300;
+    }
+  }
+  & .arrow, & .arrow:after {
+    display: block;
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #d9c13f;
+  }
+  & .arrow {
+    top: -18px;
+    &:after {
+      top: 5px;
+      left: -15px;
+      border-bottom-color: #55656e;
+    }
+  }
+}
+
+.instruction {
+  font-style: italic;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 /* Modified version of SpinKit */

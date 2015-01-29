@@ -83,6 +83,8 @@
     views = {};
 
     views.Bubbles = function (data) {
+        var that = this;
+
         this.margin = {top: 120, right: 20, bottom: 40, left: 60};
         this.data = data;
         this.$el = $('#exhibit');
@@ -99,14 +101,74 @@
         this.fg = this.g.append('g');
         this.interactionLayer = this.g.append('g');
 
+        this.mouseover = function (d) {
+            that.fg.select('.bubble.school-' + d.code)
+                .classed('highlighted', true)
+                .transition()
+                .ease('elastic')
+                .duration(900)
+                .attr('r', 18);
+
+            var tooltip = d3.select('#tooltip');
+
+            tooltip.selectAll('.field.schoolname')
+                .text(d.name);
+            tooltip.selectAll('.field.atriskcount')
+                .text(d.atRiskCount);
+            tooltip.selectAll('.field.atriskpercent')
+                .text((d.atRiskCount / d.enrollment * 100).toFixed(1));
+            tooltip.selectAll('.field.atriskfunds')
+                .text('$' + commasFormatter(d.atRiskFunds));
+            tooltip.selectAll('.field.perstudentfunds')
+                .text('$' + commasFormatter(d.atRiskFunds / d.atRiskCount));
+
+            tooltip.style('display', 'block');
+        };
+
+        this.mouseout = function (d) {
+            that.fg.select('.bubble.school-' + d.code)
+                .classed('highlighted', false)
+                .transition()
+                .ease('elastic')
+                .duration(900)
+                .attr('r', 6);
+
+            d3.select('#tooltip').style('display', 'none');
+        };
+
+        $('svg.bubble.chart').on('mousemove', function (e) {
+            var offset,
+                xPos = e.pageX;
+            if (that.pageWidth && that.pageWidth < xPos + 396) {
+                offset = xPos + 409 - that.pageWidth;
+
+                $('#tooltip .arrow').css('left', offset > 370 ? 370 : offset);
+                $('#tooltip').css({
+                    'left': '',
+                    'right': 0
+                });
+            } else {
+                offset = xPos - 42;
+
+                $('#tooltip .arrow').css('left', 15);
+                $('#tooltip').css({
+                    'left': offset,
+                    'right': ''
+                });
+            }
+        });
+
         this.resize();
     };
 
     views.Bubbles.prototype.resize = function () {
         var xAxis, yAxis,
-            width = this.$el.width() - this.margin.left - this.margin.right,
+            elWidth = this.$el.width(),
+            width = elWidth - this.margin.left - this.margin.right,
             height = this.$el.height() - this.margin.top - this.margin.bottom,
             that = this;
+
+        this.pageWidth = elWidth + 16;
 
         this.svg
             .attr("width", width + this.margin.left + this.margin.right)
@@ -200,44 +262,13 @@
 
         voronoiPaths.enter().append('path')
             .attr('class', 'voronoi')
-            .on("mouseover", function (d) { that.mouseover(d); })
-            .on("mouseout", function (d) { that.mouseout(d); });
+            .on("mouseover", this.mouseover)
+            .on("mouseout", this.mouseout);
 
         voronoiPaths.attr("d", function (d) { return "M" + d.join("L") + "Z"; })
             .datum(function (d) { return d.point; });
 
         voronoiPaths.exit().remove();
-    };
-
-    views.Bubbles.prototype.mouseover = function (d) {
-        this.fg.select('.bubble.school-' + d.code)
-            .classed('highlighted', true)
-            .transition()
-            .ease('elastic')
-            .duration(900)
-            .attr('r', 18);
-
-        $('#description .template h3').text(d.name);
-        $('#enrollment').text(d.enrollment);
-        $('#atriskcount').text(d.atRiskCount);
-        $('#atriskpercent').text((d.atRiskCount / d.enrollment * 100).toFixed(1));
-        $('#atriskfunds').text('$' + commasFormatter(d.atRiskFunds));
-        $('#perstudentfunds').text('$' + commasFormatter(d.atRiskFunds / d.atRiskCount));
-
-        $('#description .placeholder').hide();
-        $('#description .template').show();
-    };
-
-    views.Bubbles.prototype.mouseout = function (d) {
-        this.fg.select('.bubble.school-' + d.code)
-            .classed('highlighted', false)
-            .transition()
-            .ease('elastic')
-            .duration(900)
-            .attr('r', 6);
-
-        $('#description .placeholder').show();
-        $('#description .template').hide();
     };
 
 }());
