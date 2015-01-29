@@ -16,10 +16,6 @@ body {
   line-height: 1.5em;
 }
 
-button {
-  font-family: inherit;
-}
-
 a {
   text-decoration: none;
   color: inherit;
@@ -74,8 +70,29 @@ strong {
   }
 }
 
-header {
+header, #controls {
   text-align: center;
+}
+
+form {
+  line-height: 2em;
+}
+
+input[type="radio"] {
+  display: none;
+  & + label {
+    padding: 3px 11px;
+    margin: 0 1px;
+    background: #75858e;
+    border-radius: 5px;
+    &:hover {
+      background: #65757e;
+    }
+  }
+  &:checked + label {
+    background: #1a1e20;
+    color: #fff;
+  }
 }
 
 #exhibit {
