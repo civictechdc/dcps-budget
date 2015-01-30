@@ -12,8 +12,8 @@
 
         MAX = 1500000,
 
-        commasFormatter = d3.format(",.0f"),
-        schoolCodeFormatter = d3.format("04d");
+        commasFormatter = d3.format(',.0f'),
+        schoolCodeFormatter = d3.format('04d');
 
     $(function () {
         d3.csv(DATA_PATH, function (d) {
@@ -93,9 +93,9 @@
         this.y = d3.scale.linear().domain([0, MAX]);
 
         this.svg = d3.select('#exhibit').append('svg')
-            .attr("class", "bubble chart");
+            .attr('class', 'bubble chart');
         this.g = this.svg.append('g')
-            .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+            .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
         this.bg = this.g.append('g');
         this.fg = this.g.append('g');
@@ -177,8 +177,8 @@
         this.pageWidth = elWidth + 16;
 
         this.svg
-            .attr("width", width + this.margin.left + this.margin.right)
-            .attr("height", height + this.margin.top + this.margin.bottom);
+            .attr('width', width + this.margin.left + this.margin.right)
+            .attr('height', height + this.margin.top + this.margin.bottom);
 
         this.x.range([0, width]);
         this.y.range([height, 0]);
@@ -187,14 +187,14 @@
             .scale(this.x)
             .ticks(width > 800 ? 12 : 6)
             .tickSize(-height - 20)
-            .orient("bottom");
+            .orient('bottom');
 
         yAxis = d3.svg.axis()
             .scale(this.y)
             .tickValues([0, 250000, 500000, 750000, 1000000, 1250000, 1500000])
             .tickFormat(function (d) { return '$' + commasFormatter(d / 1000) + 'K'; })
             .tickSize(-width - 20)
-            .orient("left");
+            .orient('left');
 
         this.voronoi = d3.geom.voronoi()
             .x(function (d) { return that.x(d.atRiskCount); })
@@ -205,36 +205,36 @@
         this.bg.selectAll('.axis').remove();
         this.bg.selectAll('.guide').remove();
 
-        this.bg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + (height + 10) + ")")
+        this.bg.append('g')
+            .attr('class', 'x axis')
+            .attr('transform', 'translate(0,' + (height + 10) + ')')
             .call(xAxis)
-            .append("text")
-                .attr("class", "label")
-                .attr("x", width - 5)
-                .attr("y", -16)
-                .style("text-anchor", "end")
-                .text("# of At-Risk Students");
+            .append('text')
+                .attr('class', 'label')
+                .attr('x', width - 5)
+                .attr('y', -16)
+                .style('text-anchor', 'end')
+                .text('# of At-Risk Students');
 
-        this.bg.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(-10,0)")
+        this.bg.append('g')
+            .attr('class', 'y axis')
+            .attr('transform', 'translate(-10,0)')
             .call(yAxis)
-            .append("text")
-                .attr("class", "label")
-                .attr("transform", "rotate(-90)")
-                .attr("x", -4)
-                .attr("y", 16)
-                .attr("dy", ".71em")
-                .style("text-anchor", "end")
-                .text("Total At-Risk Funds");
+            .append('text')
+                .attr('class', 'label')
+                .attr('transform', 'rotate(-90)')
+                .attr('x', -4)
+                .attr('y', 16)
+                .attr('dy', '.71em')
+                .style('text-anchor', 'end')
+                .text('Total At-Risk Funds');
 
-        this.bg.append("line")
-            .attr("class", "guide")
-            .attr("x1", this.x(0))
-            .attr("y1", this.y(0))
-            .attr("x2", this.x(600))
-            .attr("y2", this.y(1206375));
+        this.bg.append('line')
+            .attr('class', 'guide')
+            .attr('x1', this.x(0))
+            .attr('y1', this.y(0))
+            .attr('x2', this.x(600))
+            .attr('y2', this.y(1206375));
 
         this.refresh();
     };
@@ -242,7 +242,10 @@
     views.Bubbles.prototype.refresh = function () {
         var bubbles,
             voronoiPaths,
+            n = 0,
             that = this;
+
+        this.$el.css('overflow', 'visible');
 
         bubbles = this.fg.selectAll('.bubble')
             .data(this.data);
@@ -259,7 +262,9 @@
             .delay(function (d) { return d.atRiskCount / 2 + Math.random() * 300; })
             .each('start', function () { d3.select(this).classed('disabled', function (d) { return d.filtered; }); })
             .attr('r', function (d) { return d.filtered ? 3 : 6; })
-            .attr('cy', function (d) { return d.atRiskFunds > MAX ? -10 : that.y(d.atRiskFunds); });
+            .attr('cy', function (d) { return d.atRiskFunds > MAX ? -10 : that.y(d.atRiskFunds); })
+            .each(function () { n += 1; })
+            .each('end', function () { n -= 1; if (n === 0) { that.$el.css('overflow', 'hidden'); } });
 
         bubbles.exit().remove();
 
@@ -268,10 +273,10 @@
 
         voronoiPaths.enter().append('path')
             .attr('class', 'voronoi')
-            .on("mouseover", this.mouseover)
-            .on("mouseout", this.mouseout);
+            .on('mouseover', this.mouseover)
+            .on('mouseout', this.mouseout);
 
-        voronoiPaths.attr("d", function (d) { return "M" + d.join("L") + "Z"; })
+        voronoiPaths.attr('d', function (d) { return 'M' + d.join('L') + 'Z'; })
             .datum(function (d) { return d.point; });
 
         voronoiPaths.exit().remove();
