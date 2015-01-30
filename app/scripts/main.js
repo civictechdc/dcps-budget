@@ -239,6 +239,21 @@
             .attr('x2', this.x(600))
             .attr('y2', this.y(1206375));
 
+        this.bg.append('text')
+            .attr('class', 'guide')
+            .attr('x', this.x(600))
+            .attr('y', this.y(1206375) - 3)
+            .attr("transform", 'rotate(' +
+                (Math.atan(
+                    (this.y(1206374) - this.y(0)) /
+                        (this.x(600) - this.x(0))
+                ) * (180 / Math.PI)) +
+                ' ' + this.x(600) +
+                ' ' + this.y(1206375) +
+                ')')
+            .style('text-anchor', 'end')
+            .text('Avg $ per student');
+
         this.refresh();
     };
 

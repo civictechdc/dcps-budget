@@ -125,6 +125,13 @@ input[type="radio"] {
     stroke-linecap: round;
   }
 
+  text.guide {
+    fill: #fff;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 11px;
+  }
+
   circle.bubble {
     fill: #afab6e;
     fill: rgba(217,193,63,.5);
