@@ -90,6 +90,7 @@
         this.$el = $('#exhibit');
 
         this.$el.css('overflow', 'visible');
+        window.setTimeout(function () { that.$el.css('overflow', 'hidden'); }, 900);
 
         this.x = d3.scale.linear().domain([0, 600]);
         this.y = d3.scale.linear().domain([0, MAX]);
@@ -173,7 +174,7 @@
         var xAxis, yAxis,
             elWidth = this.$el.width(),
             width = elWidth - this.margin.left - this.margin.right,
-            height = this.$el.height() - this.margin.top - this.margin.bottom,
+            height = 400 - this.margin.top - this.margin.bottom,
             that = this;
 
         this.pageWidth = elWidth + 16;
@@ -244,7 +245,6 @@
     views.Bubbles.prototype.refresh = function () {
         var bubbles,
             voronoiPaths,
-            n = 0,
             that = this;
 
         bubbles = this.fg.selectAll('.bubble')
@@ -262,8 +262,7 @@
             .delay(function (d) { return d.atRiskCount / 2 + Math.random() * 300; })
             .attr('r', function (d) { return d.filtered ? 3 : 6; })
             .attr('cy', function (d) { return d.atRiskFunds > MAX ? -10 : that.y(d.atRiskFunds); })
-            .each('start', function () { n += 1; d3.select(this).classed('disabled', function (d) { return d.filtered; }); })
-            .each('end', function () { n -= 1; if (n === 0) { that.$el.css('overflow', 'hidden'); } });
+            .each('start', function () { d3.select(this).classed('disabled', function (d) { return d.filtered; }); });
 
         bubbles.exit().remove();
 
