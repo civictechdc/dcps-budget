@@ -89,6 +89,8 @@
         this.data = data;
         this.$el = $('#exhibit');
 
+        this.$el.css('overflow', 'visible');
+
         this.x = d3.scale.linear().domain([0, 600]);
         this.y = d3.scale.linear().domain([0, MAX]);
 
@@ -245,8 +247,6 @@
             n = 0,
             that = this;
 
-        this.$el.css('overflow', 'visible');
-
         bubbles = this.fg.selectAll('.bubble')
             .data(this.data);
 
@@ -260,10 +260,9 @@
             .ease('elastic')
             .duration(900)
             .delay(function (d) { return d.atRiskCount / 2 + Math.random() * 300; })
-            .each('start', function () { d3.select(this).classed('disabled', function (d) { return d.filtered; }); })
             .attr('r', function (d) { return d.filtered ? 3 : 6; })
             .attr('cy', function (d) { return d.atRiskFunds > MAX ? -10 : that.y(d.atRiskFunds); })
-            .each(function () { n += 1; })
+            .each('start', function () { n += 1; d3.select(this).classed('disabled', function (d) { return d.filtered; }); })
             .each('end', function () { n -= 1; if (n === 0) { that.$el.css('overflow', 'hidden'); } });
 
         bubbles.exit().remove();
