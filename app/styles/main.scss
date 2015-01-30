@@ -33,7 +33,7 @@ h1 {
 }
 
 strong {
-  font-weight: 900;
+  font-weight: 700;
 }
 
 #loading {
@@ -87,7 +87,7 @@ input[type="radio"] {
     }
   }
   &:checked + label {
-    background: #1a1e20;
+    background: #55656e;
     color: #fff;
   }
 }
@@ -96,6 +96,9 @@ input[type="radio"] {
   height: 400px;
   margin-bottom: -80px;
   overflow: hidden;
+  .instruction {
+    margin-top: -6px;
+  }
 }
 
 .bubble.chart {
@@ -113,7 +116,7 @@ input[type="radio"] {
     font-weight: 300;
     &.label {
       font-size: 14px;
-      font-weight: 900;
+      font-weight: 700;
     }
   }
 
@@ -157,19 +160,21 @@ input[type="radio"] {
   padding: 11px 15px;
   border-radius: 15px;
   border: 3px solid #d9c13f;
-  font-size: 13px;
+  font-size: 14px;
   h3 {
+    color: #d9c13f;
     font-size: 21px;
-    margin: 0 0 11px 0;
+    margin: 5px 0 11px 0;
   }
   p {
     margin: 0;
     &.instruction {
-      margin-top: 7px;
+      color: #d9c13f;
+      margin: 8px 0 4px 0;
       font-weight: 300;
     }
   }
-  & .arrow, & .arrow:after {
+  .arrow, .arrow:after {
     display: block;
     content: "";
     position: absolute;
@@ -179,7 +184,7 @@ input[type="radio"] {
     border-right: 15px solid transparent;
     border-bottom: 15px solid #d9c13f;
   }
-  & .arrow {
+  .arrow {
     top: -18px;
     &:after {
       top: 5px;

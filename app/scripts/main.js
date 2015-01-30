@@ -101,6 +101,12 @@
         this.fg = this.g.append('g');
         this.interactionLayer = this.g.append('g');
 
+        d3.select('#exhibit')
+            .append('div')
+            .attr('class', 'instruction')
+            .append('h3')
+            .text('Hover over a school to view details');
+
         this.mouseover = function (d) {
             that.fg.select('.bubble.school-' + d.code)
                 .classed('highlighted', true)
