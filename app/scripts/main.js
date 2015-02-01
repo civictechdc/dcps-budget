@@ -108,7 +108,7 @@
 
         loadView: function (view) {
             $('#exhibit').empty();
-            $('#school-view').slideUp();
+            $('#school-view').hide();
             app.view = new views[view](app.data);
         }
     };
@@ -322,8 +322,6 @@
             .attr('cy', function (d) { return d.atRiskFunds > MAX ? -10 : that.y(d.atRiskFunds); })
             .each('start', function () { d3.select(this).classed('disabled', function (d) { return d.filtered; }); });
 
-        bubbles.exit().remove();
-
         voronoiPaths = this.interactionLayer.selectAll('.voronoi')
             .data(this.voronoi(_.reject(this.data, 'filtered')));
 
@@ -337,6 +335,77 @@
             .datum(function (d) { return d.point; });
 
         voronoiPaths.exit().remove();
+    };
+
+    views.Bars = function (data) {
+        var header;
+
+        this.data = data;
+        this.data = _.sortBy(this.data, function (d) {
+            return -(d.atRiskFunds / d.atRiskCount);
+        });
+
+        this.table = d3.select('#exhibit')
+            .append('table')
+            .attr('class', 'bar-chart')
+            .attr('summary', 'DCPS schools sorted by funding recieved per at-risk student');
+
+        header = this.table.append('thead')
+            .append('tr');
+
+        header.append('th')
+            .attr('scope', 'col')
+            .text('School Name');
+        header.append('th')
+            .attr('scope', 'col')
+            .text('At-Risk Students');
+        header.append('th')
+            .attr('scope', 'col')
+            .text('Funding per Student');
+
+        this.tbody = this.table.append('tbody');
+
+        this.refresh();
+    };
+
+    views.Bars.prototype.resize = function () {
+        return;
+    };
+
+    views.Bars.prototype.refresh = function () {
+        var maxSchool = this.data[0],
+            // maxSchool = _.reject(this.data, 'filtered')[0],
+            max = maxSchool.atRiskFunds / maxSchool.atRiskCount,
+            rows = this.tbody.selectAll('tr.bar')
+                .data(this.data),
+            rowTemplate = _.template(
+                '<td><%= name %></td>' +
+                    '<td><%= atRiskCount %></td>' +
+                    '<td>' +
+                    '<span class="rect"></span>' +
+                    '<%= perStudentFunds %>' +
+                    '</td>'
+            ),
+            rowCount = 0;
+
+        rows.enter().append('tr')
+            .attr('class', function (d) { return 'bar school-' + d.code; })
+            .html(function (d) {
+                d.perStudentFunds = '$' + commasFormatter(d.atRiskFunds / d.atRiskCount);
+                return rowTemplate(d);
+            });
+
+        rows.each(function (d) {
+            d3.select(this)
+                .select('span.rect')
+                .style('width', (d.atRiskFunds / d.atRiskCount / max * 100) + '%');
+        });
+
+        rows.classed('filtered', function (d) { return d.filtered; })
+            .classed('odd', function (d) {
+                if (!d.filtered) { rowCount += 1; }
+                return rowCount % 2 === 1;
+            });
     };
 
     populateSchoolView = function (schoolView, d) {

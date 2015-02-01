@@ -33,9 +33,14 @@ h1 {
   line-height: 1.1em
 }
 
-h4 {
+h4, thead th {
   text-transform: uppercase;
   font-size: 13px;
+}
+
+thead th {
+  font-weight: 700;
+  text-align: left;
 }
 
 strong {
@@ -163,6 +168,65 @@ input[type="radio"] {
   }
 }
 
+.bar-chart {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 25px;
+
+  thead {
+    background: #55656e;
+    color: #fff;
+  }
+
+  td, th {
+    padding: 6px 11px;
+    white-space: nowrap;
+    line-height: 1em;
+  }
+
+  td {
+    font-size: 14px;
+    &:last-child {
+      width: 100%;
+      padding-right: 68px;
+      font-weight: 700;
+    }
+  }
+
+  tr.filtered {
+    display: none;
+  }
+
+  tbody tr {
+    cursor: pointer;
+    &.odd {
+      background-color: #75858e;
+    }
+    &:hover {
+      background: #65757e;
+    }
+  }
+
+  span.rect {
+    background: #d9c13f;
+    display: inline-block;
+    height: 11px;
+    margin-right: 6px;
+    border-radius: 2px;
+  }
+
+  @media screen and (max-width: 599px) {
+    td:nth-child(2), th:nth-child(2) {
+      display: none;
+    }
+    span.rect { display: none }
+    td, th {
+      white-space: normal;
+      width: 50%;
+    }
+  }
+}
+
 .tooltip {
   margin-top: -115px;
   display: none;
@@ -217,7 +281,7 @@ input[type="radio"] {
   text-align: center;
 }
 
-#school-view {
+.school-view {
   display: none;
   background: #55656e;
   color: #fff;
@@ -240,7 +304,7 @@ input[type="radio"] {
     &.single {
       width: 100%;
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 599px) {
       width: 100%;
     }
   }
