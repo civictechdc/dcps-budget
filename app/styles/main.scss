@@ -14,6 +14,7 @@ body {
   font-family: 'Lato', Helvetica, Arial, sans-serif;
   font-size: 17px;
   line-height: 1.5em;
+  margin: 8px;
 }
 
 a {
@@ -30,6 +31,11 @@ h1 {
   font-size: 42px;
   letter-spacing: 5px;
   line-height: 1.1em
+}
+
+h4 {
+  text-transform: uppercase;
+  font-size: 13px;
 }
 
 strong {
@@ -94,6 +100,7 @@ input[type="radio"] {
 
 #exhibit {
   overflow: hidden;
+  margin-bottom: 50px;
   .instruction {
     margin-top: -6px;
   }
@@ -157,7 +164,7 @@ input[type="radio"] {
 }
 
 .tooltip {
-  margin-top: -65px;
+  margin-top: -115px;
   display: none;
   width: 420px;
   position: absolute;
@@ -167,6 +174,10 @@ input[type="radio"] {
   border-radius: 15px;
   border: 3px solid #d9c13f;
   font-size: 14px;
+  z-index: 1000;
+  -moz-box-shadow:    0 5px 8px rgba(26, 30, 32, .25);
+  -webkit-box-shadow: 0 5px 8px rgba(26, 30, 32, .25);
+  box-shadow:         0 5px 8px rgba(26, 30, 32, .25);
   h3 {
     color: #d9c13f;
     font-size: 21px;
@@ -204,6 +215,102 @@ input[type="radio"] {
   font-style: italic;
   text-transform: uppercase;
   text-align: center;
+}
+
+#school-view {
+  display: none;
+  background: #55656e;
+  color: #fff;
+  margin: 0 -13px;
+  padding: 0 24px 22px 24px;
+  position: relative;
+  -moz-box-shadow:    inset 0 2px 5px rgba(26, 30, 32, .5);
+  -webkit-box-shadow: inset 0 2px 5px rgba(26, 30, 32, .5);
+  box-shadow:         inset 0 2px 5px rgba(26, 30, 32, .5);
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 11px 0;
+  }
+
+  .column {
+    width: 50%;
+    float: left;
+    &.single {
+      width: 100%;
+    }
+    @media screen and (max-width: 600px) {
+      width: 100%;
+    }
+  }
+
+  h2 {
+    margin-bottom: .35em;
+  }
+
+  ul {
+    padding: 0;
+  }
+
+  li {
+    list-style: none;
+    font-size: 14px;
+    span.amount {
+      display: inline-block;
+      width: 70px;
+    }
+  }
+
+  .amount {
+    font-weight: 700;
+    color: #d9c13f;
+    fill: #d9c13f;
+  }
+
+  div.chart {
+    width: 70px;
+    height: 70px;
+    float: left;
+    margin: -1px 13px -2px -1px;
+    path.arc {
+      fill: #85959e;
+      &:first-child {
+        fill: #d9c13f;
+      }
+    }
+  }
+}
+
+a.learndc {
+  display: inline-block;
+  color: #d9c13f;
+  font-weight: 300;
+  border: 1px solid #d9c13f;
+  width: 180px;
+  text-align: center;
+  border-radius: 5px;
+  margin-top: 22px;
+  &:hover {
+    background: rgba(217, 193, 63, .15);
+  }
+  clear: both;
+}
+
+button.close {
+  font-family: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 33px;
+  font-weight: 300;
+  position: absolute;
+  top: 0;
+  right: 15px;
+  cursor: pointer;
+  &:hover {
+    color: #d9c13f;
+  }
 }
 
 /* Modified version of SpinKit */

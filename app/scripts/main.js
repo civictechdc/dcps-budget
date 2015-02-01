@@ -7,6 +7,7 @@
 
     var app,
         views,
+        populateSchoolView,
 
         DATA_PATH = 'data/data.csv',
 
@@ -24,7 +25,39 @@
                 level: d.LEVEL === '' ? null : d.LEVEL,
                 enrollment: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
                 atRiskCount: d.ATRISKCOUNT === '' ? null : +d.ATRISKCOUNT,
-                atRiskFunds: d.ATRISKTOTAL === '' ? null : +d.ATRISKTOTAL
+                atRiskFunds: d.ATRISKTOTAL === '' ? null : +d.ATRISKTOTAL,
+                budgetLines: {
+                    'Dean of Students': +d.DEANOFSTUDENTS,
+                    'In-School Suspension Coordinator': +d.ISSCOORDINATOR,
+                    'Guidance Counselor': +d.GUIDANCECOUNSELOR,
+                    'Attendance Counselor': +d.ATTENDCOUNSELOR,
+                    'Psychcologist': +d.PSYCH,
+                    'Social Worker': +d.SOCIALWORKER,
+                    'Intervention Coach': +d.INTERVENTIONCOACH,
+                    'English Teacher': +d.ENGLISHTEACHER,
+                    'Math Teacher': +d.MATHTEACHER,
+                    'Reading Teacher': +d.READINGTEACHER,
+                    'Resource Teacher': +d.RESOURCETEACHER,
+                    'Science Teacher': +d.SCIENCETEACHER,
+                    'Social Studies Teacher': +d.SOCIALSTUDIESTEACHER,
+                    'Art Teacher': +d.ARTTEACHER,
+                    'Health/PE Teacher': +d.HEALTHTEACHER,
+                    'Music Teacher': +d.MUSICTEACHER,
+                    'World Language Teacher': +d.LANGUAGETEACHER,
+                    'Special Education Teacher': +d.SPEDTEACHER,
+                    'Special Education Aide': +d.SPEDAIDE,
+                    'Behavior Technician': +d.BEHAVIORTECH,
+                    'Assistant Principal for Intervention': +d.ASSTPRINCIPALINTERVENTION,
+                    'Reading Specialist': +d.READINGSPECIALIST,
+                    'Assistant Principal for Literacy': +d.ASSTPRINCIPALLITERACY,
+                    'Proving What\'s Possible for Student Satisfaction Award': +d.PWPSTUDENTSATISFACTION,
+                    'Extended Day Funds': +d.EXTENDEDDAY,
+                    'Middle Grade Excursions and Activities': +d.MIDDLEGRADEACTIVITIES,
+                    'Evening Credit Recovery': +d.ECR,
+                    'Other Funds': +d.OTHER,
+                    'New Heights Teen Parent Program': +d.NEWHEIGHTS,
+                    'Reading Partners Program': +d.READINGPARTNERS
+                }
             };
         }, app.initialize);
     });
@@ -74,6 +107,7 @@
 
         loadView: function (view) {
             $('#exhibit').empty();
+            $('#school-view').slideUp();
             app.view = new views[view](app.data);
         }
     };
@@ -125,7 +159,7 @@
             tooltip.selectAll('.field.atriskcount')
                 .text(d.atRiskCount);
             tooltip.selectAll('.field.atriskpercent')
-                .text((d.atRiskCount / d.enrollment * 100).toFixed(1));
+                .text((d.atRiskCount / d.enrollment * 100).toFixed(0));
             tooltip.selectAll('.field.atriskfunds')
                 .text('$' + commasFormatter(d.atRiskFunds));
             tooltip.selectAll('.field.perstudentfunds')
@@ -143,6 +177,14 @@
                 .attr('r', 6);
 
             d3.select('#tooltip').style('display', 'none');
+        };
+
+        this.click = function (d) {
+            populateSchoolView(d3.select('#school-view'), d);
+            $('#school-view').slideDown();
+            $('#school-view button.close').click(function () {
+                $('#school-view').slideUp();
+            });
         };
 
         $('svg.bubble.chart').on('mousemove', function (e) {
@@ -287,12 +329,89 @@
         voronoiPaths.enter().append('path')
             .attr('class', 'voronoi')
             .on('mouseover', this.mouseover)
-            .on('mouseout', this.mouseout);
+            .on('mouseout', this.mouseout)
+            .on('click', this.click);
 
         voronoiPaths.attr('d', function (d) { return 'M' + d.join('L') + 'Z'; })
             .datum(function (d) { return d.point; });
 
         voronoiPaths.exit().remove();
+    };
+
+    populateSchoolView = function (schoolView, d) {
+        var budgetLines = schoolView.selectAll('ul.field.budgetlines'),
+            pieChart = schoolView.selectAll('div.chart'),
+            percent = d.atRiskCount / d.enrollment,
+            radius = 35,
+            pie = d3.layout.pie().sort(null),
+            arc = d3.svg.arc()
+                .innerRadius(radius - 8)
+                .outerRadius(radius);
+
+        schoolView.selectAll('.field.schoolname')
+            .text(d.name);
+        schoolView.selectAll('.field.atriskcount')
+            .text(d.atRiskCount);
+        schoolView.selectAll('.field.enrollment')
+            .text(d.enrollment);
+        schoolView.selectAll('.field.atriskfunds')
+            .text('$' + commasFormatter(d.atRiskFunds));
+        schoolView.selectAll('.field.perstudentfunds')
+            .text('$' + commasFormatter(d.atRiskFunds / d.atRiskCount));
+        schoolView.selectAll('a.learndc')
+            .attr('href', 'http://learndc.org/schoolprofiles/view?s=' + d.code + '#overview');
+
+        budgetLines.selectAll('li').remove();
+
+        _(d.budgetLines).pairs()
+            .filter(function (a) { return a[1] > 0; })
+            .sortBy(function (a) { return -a[1]; })
+            .each(function (a) {
+                budgetLines.append('li')
+                    .html('<span class="amount">$' + commasFormatter(a[1]) + '</span> ' + a[0]);
+            });
+
+        pieChart.selectAll('svg').remove();
+
+        pieChart = pieChart.append('svg')
+            .attr('width', '70px')
+            .attr('height', '70px')
+            .append("g");
+
+        pieChart.attr('transform', 'translate(' + radius + ',' + radius + ')')
+            .selectAll('.arc')
+            .data(pie([0, 1]))
+            .enter()
+            .append('path')
+            .attr('class', 'arc')
+            .attr('d', function (d) {
+                this._current = d;
+                return arc(d);
+            })
+            .data(pie([percent, 1 - percent]))
+            .transition()
+            .duration(1000 * percent)
+            .attrTween('d', function (d) {
+                var interpolate = d3.interpolate(this._current, d);
+                return function (t) {
+                    return arc(interpolate(t));
+                };
+            });
+
+        pieChart.append('text')
+            .attr('class', 'amount')
+            .attr('y', 5)
+            .style('text-anchor', 'middle')
+            .text('0%')
+            .transition()
+            .duration(1000 * percent)
+            .tween('text', function () {
+                var i = function (t) {
+                    return (percent * t * 100).toFixed(0) + '%';
+                };
+
+                return function (t) { this.textContent = i(t); };
+            });
     };
 
 }());
