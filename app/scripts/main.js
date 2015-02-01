@@ -107,6 +107,7 @@
         },
 
         loadView: function (view) {
+            clearTimeout(window.quickUglyGlobalTimeout);
             $('#exhibit').empty();
             $('#school-view').hide();
             app.view = new views[view](app.data);
@@ -125,7 +126,7 @@
         this.$el = $('#exhibit');
 
         this.$el.css('overflow', 'visible');
-        window.setTimeout(function () { that.$el.css('overflow', 'hidden'); }, 900);
+        window.quickUglyGlobalTimeout = setTimeout(function () { that.$el.css('overflow', 'hidden'); }, 900);
 
         this.x = d3.scale.linear().domain([0, 600]);
         this.y = d3.scale.linear().domain([0, MAX]);
@@ -338,7 +339,12 @@
     };
 
     views.Bars = function (data) {
-        var header;
+        var header,
+            that = this;
+
+        this.$el = $('#exhibit');
+
+        this.$el.css('overflow', 'visible');
 
         this.data = data;
         this.data = _.sortBy(this.data, function (d) {
@@ -365,6 +371,45 @@
 
         this.tbody = this.table.append('tbody');
 
+        this.removeSchoolViews = function (noAnimate) {
+            $('.bar-chart .school-view').slideUp({
+                duration: noAnimate ? 0 : 400,
+                complete: function () {
+                    $(this).parent().parent().remove();
+                }
+            });
+        };
+
+        this.click = function (d) {
+            that.removeSchoolViews();
+
+            if (d.code === that.expandedRow) {
+                that.expandedRow = null;
+            } else {
+                that.expandedRow = d.code;
+
+                var tr = $('<tr>')
+                        .addClass('school-view-row' +
+                            ($(this).hasClass('odd') ? ' odd' : '')),
+                    td = $('<td>')
+                        .attr('colspan', 3)
+                        .appendTo(tr),
+                    schoolView = $('#school-view').clone().removeAttr('id');
+
+                populateSchoolView(d3.select(schoolView[0]), d);
+                schoolView.find('button.close')
+                    .click(function () {
+                        that.expandedRow = null;
+                        that.removeSchoolViews();
+                    });
+                schoolView.appendTo(td);
+
+                $(this).after(tr);
+
+                schoolView.slideDown();
+            }
+        };
+
         this.refresh();
     };
 
@@ -373,6 +418,8 @@
     };
 
     views.Bars.prototype.refresh = function () {
+        this.removeSchoolViews(true);
+
         var maxSchool = this.data[0],
             // maxSchool = _.reject(this.data, 'filtered')[0],
             max = maxSchool.atRiskFunds / maxSchool.atRiskCount,
@@ -393,7 +440,8 @@
             .html(function (d) {
                 d.perStudentFunds = '$' + commasFormatter(d.atRiskFunds / d.atRiskCount);
                 return rowTemplate(d);
-            });
+            })
+            .on('click', this.click);
 
         rows.each(function (d) {
             d3.select(this)

@@ -171,26 +171,17 @@ input[type="radio"] {
 .bar-chart {
   border-collapse: collapse;
   border-spacing: 0;
-  margin-top: 25px;
+  margin: 25px -8px 0 -8px;
 
   thead {
     background: #55656e;
     color: #fff;
   }
 
-  td, th {
+  tr:not(.school-view-row) td, th {
     padding: 6px 11px;
     white-space: nowrap;
     line-height: 1em;
-  }
-
-  td {
-    font-size: 14px;
-    &:last-child {
-      width: 100%;
-      padding-right: 68px;
-      font-weight: 700;
-    }
   }
 
   tr.filtered {
@@ -198,12 +189,23 @@ input[type="radio"] {
   }
 
   tbody tr {
-    cursor: pointer;
     &.odd {
       background-color: #75858e;
     }
-    &:hover {
-      background: #65757e;
+    &:not(.school-view-row) {
+      cursor: pointer;
+      &:hover {
+        background: #65757e;
+      }
+
+      td {
+        font-size: 14px;
+        &:last-child {
+          width: 100%;
+          padding-right: 68px;
+          font-weight: 700;
+        }
+      }
     }
   }
 
@@ -281,12 +283,16 @@ input[type="radio"] {
   text-align: center;
 }
 
+.school-view-row .school-view .container {
+  margin: 0 14px;
+}
+
 .school-view {
   display: none;
   background: #55656e;
   color: #fff;
   margin: 0 -13px;
-  padding: 0 24px 22px 24px;
+  padding: 0 24px;
   position: relative;
   -moz-box-shadow:    inset 0 2px 5px rgba(26, 30, 32, .5);
   -webkit-box-shadow: inset 0 2px 5px rgba(26, 30, 32, .5);
@@ -303,9 +309,11 @@ input[type="radio"] {
     float: left;
     &.single {
       width: 100%;
+      padding-bottom: 22px;
     }
     @media screen and (max-width: 599px) {
       width: 100%;
+      float: none;
     }
   }
 
@@ -347,14 +355,14 @@ input[type="radio"] {
 }
 
 a.learndc {
-  display: inline-block;
+  display: block;
   color: #d9c13f;
   font-weight: 300;
   border: 1px solid #d9c13f;
   width: 180px;
   text-align: center;
   border-radius: 5px;
-  margin-top: 22px;
+  margin-bottom: 22px;
   &:hover {
     background: rgba(217, 193, 63, .15);
   }
