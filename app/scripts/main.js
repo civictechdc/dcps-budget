@@ -26,6 +26,7 @@
                 enrollment: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
                 atRiskCount: d.ATRISKCOUNT === '' ? null : +d.ATRISKCOUNT,
                 atRiskFunds: d.ATRISKTOTAL === '' ? null : +d.ATRISKTOTAL,
+                fortyForty: d.FORTYFORTY,
                 budgetLines: {
                     'Dean of Students': +d.DEANOFSTUDENTS,
                     'In-School Suspension Coordinator': +d.ISSCOORDINATOR,
