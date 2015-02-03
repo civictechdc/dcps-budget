@@ -437,8 +437,13 @@
                 '<td><%= name %></td>' +
                     '<td><%= atRiskCount %></td>' +
                     '<td>' +
+                    '<div class="wrapper">' +
+                    '<span class="line" style="left: ' + (2010.625 / max * 100) + '%;"></span>' +
+                    '<div class="bar">' +
                     '<span class="rect"></span>' +
                     '<%= perStudentFunds %>' +
+                    '</div>' +
+                    '</div>' +
                     '</td>'
             ),
             rowCount = 0;

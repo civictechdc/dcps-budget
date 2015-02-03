@@ -211,10 +211,47 @@ input[type="radio"] {
         font-size: 14px;
         &:last-child {
           width: 100%;
-          padding-right: 68px;
           font-weight: 700;
+          position: relative;
         }
       }
+    }
+  }
+
+  div.wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 68px;
+  }
+
+  div.bar {
+    z-index: 10;
+    display: block;
+    position: relative;
+    top: 6px;
+  }
+
+  span.line {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    height: 26px;
+    width: 2px;
+    margin-left: -1px;
+    &:before, &:after {
+      display: block;
+      content: "";
+      width: 2px;
+      height: 4px;
+      background: #b5c5ce;
+      // background: rgba(255,255,255,.5);
+      border-radius: 0 0 2px 2px;
+    }
+    &:after {
+      position: absolute;
+      bottom: 0px;
+      border-radius: 2px 2px 0 0;
     }
   }
 
@@ -230,7 +267,7 @@ input[type="radio"] {
     td:nth-child(2), th:nth-child(2) {
       display: none;
     }
-    span.rect { display: none }
+    span.rect, span.line { display: none }
     td, th {
       white-space: normal;
       width: 50%;
