@@ -68,6 +68,14 @@
             $('#loading').fadeOut();
             $('#main').fadeIn();
 
+            $('p.what a').click(function () {
+                var id = $.attr(this, 'href');
+                $('html, body').animate({
+                    scrollTop: $(id).offset().top
+                }, 500);
+                return false;
+            });
+
             app.data = _.filter(data, 'atRiskCount');
             app.filterData({});
 

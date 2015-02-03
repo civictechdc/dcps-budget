@@ -60,7 +60,6 @@ strong {
 #main {
   display: none;
   position: relative;
-  padding-bottom: 92px;
 
   #description {
     clear: both;
@@ -79,6 +78,16 @@ strong {
 
 header, #controls {
   text-align: center;
+}
+
+header p.what {
+  text-transform: uppercase;
+  font-size: 13px;
+  margin: -22px 0 30px 0;
+  a {
+    color: #f0d95b;
+    &:hover { text-decoration: underline; }
+  }
 }
 
 form {
@@ -354,19 +363,21 @@ input[type="radio"] {
   }
 }
 
-a.learndc {
+a.button {
   display: block;
   color: #d9c13f;
   font-weight: 300;
   border: 1px solid #d9c13f;
-  width: 180px;
   text-align: center;
   border-radius: 5px;
-  margin-bottom: 22px;
   &:hover {
     background: rgba(217, 193, 63, .15);
   }
-  clear: both;
+  &.learndc {
+    width: 180px;
+    clear: both;
+    margin-bottom: 22px;
+  }
 }
 
 button.close {
@@ -382,6 +393,23 @@ button.close {
   cursor: pointer;
   &:hover {
     color: #d9c13f;
+  }
+}
+
+#description {
+  padding: 22px 11px;
+  max-width: 822px;
+  margin: 0 auto;
+  p { max-width: 540px; }
+  h4 { color: #f0d95b; border-top: 2px solid #f0d95b; margin-top: 3em; }
+  a.button {
+    width: 280px;
+    color: #f0d95b;
+    border-color: #f0d95b;
+  }
+  p.logos {
+    text-align: center;
+    img { margin: 3em 22px 0 22px; }
   }
 }
 
