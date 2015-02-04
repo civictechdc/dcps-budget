@@ -33,7 +33,7 @@ h1 {
   line-height: 1.1em
 }
 
-h4, thead th {
+h4, h5, thead th {
   text-transform: uppercase;
   font-size: 13px;
 }
@@ -84,8 +84,11 @@ header p.what {
   text-transform: uppercase;
   font-size: 13px;
   margin: -22px 0 30px 0;
+  font-weight: 700;
+  color: #65757e;
   a {
     color: #f0d95b;
+    font-weight: 400;
     &:hover { text-decoration: underline; }
   }
 }
@@ -450,6 +453,7 @@ button.close {
   margin: 0 auto;
   p { max-width: 540px; }
   h4 { color: #f0d95b; border-top: 2px solid #f0d95b; margin-top: 3em; }
+  h5 { color: #35454e; border-top: 2px solid #65757e; margin-top: 4.5em; }
   a.button {
     width: 280px;
     color: #f0d95b;
@@ -458,6 +462,12 @@ button.close {
   p.logos {
     text-align: center;
     img { margin: 3em 22px 0 22px; }
+  }
+  p.sources {
+    font-size: 13px;
+    color: #25353e;
+    line-height: 1.2em;
+    a { text-decoration: underline; }
   }
 }
 
