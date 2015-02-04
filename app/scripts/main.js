@@ -429,13 +429,12 @@
         this.removeSchoolViews(true);
 
         var addAllocatedAmount = function (data) {
-                var joined = data.concat([{
+                return _.sortBy(data.concat([{
                     name: 'Allotted by Funding Formula',
                     atRiskCount: -1,
                     atRiskFunds: -2079,
                     filtered: false
-                }]);
-                return _.sortBy(joined, function (d) {
+                }]), function (d) {
                     return -(d.atRiskFunds / d.atRiskCount);
                 });
             },
@@ -460,7 +459,7 @@
             rowCount = 0;
 
         rows.enter().append('tr')
-            .attr('class', function (d) { return d.code ? 'school-' + d.code : 'allocation'; })
+            .attr('class', function (d) { return 'bar ' + (d.code ? 'school-' + d.code : 'allocation'); })
             .html(function (d) {
                 d.perStudentFunds = '$' + commasFormatter(d.atRiskFunds / d.atRiskCount);
                 return rowTemplate(d);
@@ -474,9 +473,9 @@
         });
 
         rows.classed('filtered', function (d) { return d.filtered; })
-            .classed('odd', function (d) {
+            .classed('even', function (d) {
                 if (!d.filtered) { rowCount += 1; }
-                return rowCount % 2 === 1;
+                return rowCount % 2 === 0;
             });
     };
 
