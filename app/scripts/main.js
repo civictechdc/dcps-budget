@@ -136,7 +136,7 @@
         this.$el.css('overflow', 'visible');
         window.quickUglyGlobalTimeout = setTimeout(function () { that.$el.css('overflow', 'hidden'); }, 900);
 
-        this.x = d3.scale.linear().domain([0, 600]);
+        this.x = d3.scale.linear().domain([0, 650]);
         this.y = d3.scale.linear().domain([0, MAX]);
 
         this.svg = d3.select('#exhibit').append('svg')
@@ -240,7 +240,7 @@
 
         xAxis = d3.svg.axis()
             .scale(this.x)
-            .ticks(width > 800 ? 12 : 6)
+            .ticks(width > 800 ? 13 : 6)
             .tickSize(-height - 20)
             .orient('bottom');
 
@@ -288,20 +288,20 @@
             .attr('class', 'guide')
             .attr('x1', this.x(0))
             .attr('y1', this.y(0))
-            .attr('x2', this.x(600))
-            .attr('y2', this.y(2079 * 600));
+            .attr('x2', this.x(650))
+            .attr('y2', this.y(2079 * 650));
 
         this.bg.append('text')
             .attr('class', 'guide')
-            .attr('x', this.x(600))
-            .attr('y', this.y(2079 * 600) - 3)
+            .attr('x', this.x(650))
+            .attr('y', this.y(2079 * 650) - 3)
             .attr("transform", 'rotate(' +
                 (Math.atan(
-                    (this.y(2079 * 600) - this.y(0)) /
-                        (this.x(600) - this.x(0))
+                    (this.y(2079 * 650) - this.y(0)) /
+                        (this.x(650) - this.x(0))
                 ) * (180 / Math.PI)) +
-                ' ' + this.x(600) +
-                ' ' + this.y(2079 * 600) +
+                ' ' + this.x(650) +
+                ' ' + this.y(2079 * 650) +
                 ')')
             .style('text-anchor', 'end')
             .text('Funds Alotted Per Student ($2,079)');
