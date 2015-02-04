@@ -20,7 +20,7 @@ In order to realize their potential as a tool for addressing achievement gaps, w
 
 [At-risk funding spent by school, FY15](http://dcps.dc.gov/DCPS/Files/downloads/ABOUT%20DCPS/Budget%20-%20Finance/FY15%20documents/FY15%20At%20Risk%20Funds%20Spend%20by%20School.pdf): DC Public Schools. Updated May 1, 2014. Retrieved January 25, 2015.
 
-[Projected enrollment by school, FY15](https://raw.githubusercontent.com/cmgiven/at-risk/master/At%20risk_DCPS_FY15_Ext.xlsx): Deputy Mayor for Education.
+[Projected enrollment by school, FY15](https://raw.githubusercontent.com/cmgiven/at-risk/master/At%20risk_DCPS_FY15_Ext.xlsx): Deputy Mayor for Education. Updated April 4, 2014.
 
 [Additional school information](http://www.learndc.org/schoolprofiles): Office of the State Superintendent of Education. Retrieved January 25, 2015.
 
