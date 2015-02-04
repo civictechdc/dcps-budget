@@ -263,6 +263,12 @@ input[type="radio"] {
     border-radius: 2px;
   }
 
+  tr.allocation {
+    cursor: default !important;
+    color: #fff;
+    span.rect { background: #fff; }
+  }
+
   @media screen and (max-width: 599px) {
     td:nth-child(2), th:nth-child(2) {
       display: none;
@@ -384,6 +390,11 @@ input[type="radio"] {
     font-weight: 700;
     color: #d9c13f;
     fill: #d9c13f;
+  }
+
+  .comparison {
+    font-size: 13px;
+    color: #b5c5ce;
   }
 
   div.chart {

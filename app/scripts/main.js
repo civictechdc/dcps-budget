@@ -289,22 +289,22 @@
             .attr('x1', this.x(0))
             .attr('y1', this.y(0))
             .attr('x2', this.x(600))
-            .attr('y2', this.y(1206375));
+            .attr('y2', this.y(2079 * 600));
 
         this.bg.append('text')
             .attr('class', 'guide')
             .attr('x', this.x(600))
-            .attr('y', this.y(1206375) - 3)
+            .attr('y', this.y(2079 * 600) - 3)
             .attr("transform", 'rotate(' +
                 (Math.atan(
-                    (this.y(1206374) - this.y(0)) /
+                    (this.y(2079 * 600) - this.y(0)) /
                         (this.x(600) - this.x(0))
                 ) * (180 / Math.PI)) +
                 ' ' + this.x(600) +
-                ' ' + this.y(1206375) +
+                ' ' + this.y(2079 * 600) +
                 ')')
             .style('text-anchor', 'end')
-            .text('Avg $ per student');
+            .text('Funds Alotted Per Student ($2,079)');
 
         this.refresh();
     };
@@ -391,7 +391,7 @@
         this.click = function (d) {
             that.removeSchoolViews();
 
-            if (d.code === that.expandedRow) {
+            if (!d.code || d.code === that.expandedRow) {
                 that.expandedRow = null;
             } else {
                 that.expandedRow = d.code;
@@ -428,17 +428,28 @@
     views.Bars.prototype.refresh = function () {
         this.removeSchoolViews(true);
 
-        var maxSchool = this.data[0],
+        var addAllocatedAmount = function (data) {
+                var joined = data.concat([{
+                    name: 'Allotted by Funding Formula',
+                    atRiskCount: -1,
+                    atRiskFunds: -2079,
+                    filtered: false
+                }]);
+                return _.sortBy(joined, function (d) {
+                    return -(d.atRiskFunds / d.atRiskCount);
+                });
+            },
+            maxSchool = this.data[0],
             // maxSchool = _.reject(this.data, 'filtered')[0],
             max = maxSchool.atRiskFunds / maxSchool.atRiskCount,
             rows = this.tbody.selectAll('tr.bar')
-                .data(this.data),
+                .data(addAllocatedAmount(this.data)),
             rowTemplate = _.template(
                 '<td><%= name %></td>' +
-                    '<td><%= atRiskCount %></td>' +
+                    '<td><%= atRiskCount > 0 ? atRiskCount : "" %></td>' +
                     '<td>' +
                     '<div class="wrapper">' +
-                    '<span class="line" style="left: ' + (2010.625 / max * 100) + '%;"></span>' +
+                    '<span class="line" style="left: ' + (2079 / max * 100) + '%;"></span>' +
                     '<div class="bar">' +
                     '<span class="rect"></span>' +
                     '<%= perStudentFunds %>' +
@@ -449,7 +460,7 @@
             rowCount = 0;
 
         rows.enter().append('tr')
-            .attr('class', function (d) { return 'bar school-' + d.code; })
+            .attr('class', function (d) { return d.code ? 'school-' + d.code : 'allocation'; })
             .html(function (d) {
                 d.perStudentFunds = '$' + commasFormatter(d.atRiskFunds / d.atRiskCount);
                 return rowTemplate(d);
@@ -487,6 +498,8 @@
             .text(d.enrollment);
         schoolView.selectAll('.field.atriskfunds')
             .text('$' + commasFormatter(d.atRiskFunds));
+        schoolView.selectAll('.field.byformulafunds')
+            .text('$' + commasFormatter(d.atRiskCount * 2079));
         schoolView.selectAll('.field.perstudentfunds')
             .text('$' + commasFormatter(d.atRiskFunds / d.atRiskCount));
         schoolView.selectAll('a.learndc')
