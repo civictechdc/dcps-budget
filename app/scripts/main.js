@@ -375,6 +375,9 @@
             .text('At-Risk Students');
         header.append('th')
             .attr('scope', 'col')
+            .text('At-Risk Funds');
+        header.append('th')
+            .attr('scope', 'col')
             .text('Funding per Student');
 
         this.tbody = this.table.append('tbody');
@@ -446,6 +449,7 @@
             rowTemplate = _.template(
                 '<td><%= name %></td>' +
                     '<td><%= atRiskCount > 0 ? atRiskCount : "" %></td>' +
+                    '<td><%= atRiskFunds > 0 ? formattedFunds : "" %></td>' +
                     '<td>' +
                     '<div class="wrapper">' +
                     '<span class="line" style="left: ' + (2079 / max * 100) + '%;"></span>' +
@@ -461,6 +465,7 @@
         rows.enter().append('tr')
             .attr('class', function (d) { return 'bar ' + (d.code ? 'school-' + d.code : 'allocation'); })
             .html(function (d) {
+                d.formattedFunds = '$' + commasFormatter(d.atRiskFunds);
                 d.perStudentFunds = '$' + commasFormatter(d.atRiskFunds / d.atRiskCount);
                 return rowTemplate(d);
             })

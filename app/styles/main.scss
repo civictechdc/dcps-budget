@@ -272,6 +272,12 @@ input[type="radio"] {
     span.rect { background: #fff; }
   }
 
+  @media screen and (max-width: 767px) {
+    td:nth-child(3), th:nth-child(3) {
+      display: none;
+    }
+  }
+
   @media screen and (max-width: 599px) {
     td:nth-child(2), th:nth-child(2) {
       display: none;
