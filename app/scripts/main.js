@@ -403,7 +403,7 @@
                         .addClass('school-view-row' +
                             ($(this).hasClass('odd') ? ' odd' : '')),
                     td = $('<td>')
-                        .attr('colspan', 3)
+                        .attr('colspan', 4)
                         .appendTo(tr),
                     schoolView = $('#school-view').clone().removeAttr('id');
 
