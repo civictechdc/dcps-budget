@@ -473,9 +473,9 @@
         });
 
         rows.classed('filtered', function (d) { return d.filtered; })
-            .classed('even', function (d) {
+            .classed('odd', function (d) {
                 if (!d.filtered) { rowCount += 1; }
-                return rowCount % 2 === 0;
+                return rowCount % 2 === 1;
             });
     };
 

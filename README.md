@@ -18,10 +18,12 @@ In order to realize their potential as a tool for addressing achievement gaps, w
 
 # Sources and Notes
 
-[At-risk funding spend, SY14–15, and at-risk enrollment, SY13–14](http://dcps.dc.gov/DCPS/Files/downloads/ABOUT%20DCPS/Budget%20-%20Finance/FY15%20documents/FY15%20At%20Risk%20Funds%20Spend%20by%20School.pdf): DC Public Schools. Updated May 1, 2014. Retrieved January 25, 2015.
+[At-risk funding spent by school, FY15](http://dcps.dc.gov/DCPS/Files/downloads/ABOUT%20DCPS/Budget%20-%20Finance/FY15%20documents/FY15%20At%20Risk%20Funds%20Spend%20by%20School.pdf): DC Public Schools. Updated May 1, 2014. Retrieved January 25, 2015.
 
-[Total enrollment, SY13–14, and basic school facts: Office of the State Superintendent of Education](http://www.learndc.org/schoolprofiles). Retrieved January 25, 2015.
+[Projected enrollment by school, FY15](https://raw.githubusercontent.com/cmgiven/at-risk/master/At%20risk_DCPS_FY15_Ext.xlsx): Deputy Mayor for Education.
 
-The following schools recieved at-risk funds but do not have an at-risk eligible student population and are thus not shown: Ballou STAY ($305,900), Burroughs EC ($437,800), CHOICE Academy ($10,000), Incarcerated Youth Program ($26,200), Luke Moore Alternative HS ($291,200), Roosevelt STAY ($322,900), Washington Met HS ($179,500), and Youth Services Center ($10,000).
+[Additional school information](http://www.learndc.org/schoolprofiles): Office of the State Superintendent of Education. Retrieved January 25, 2015.
+
+The following schools received at-risk funds but do not have an at-risk eligible student population and are thus not shown: Ballou STAY ($305,900), CHOICE Academy ($10,000), Incarcerated Youth Program ($26,200), Luke Moore Alternative HS ($291,200), Roosevelt STAY ($322,900), Washington Met HS ($179,500), and Youth Services Center ($10,000).
 
 Published February 5, 2015 as a public domain work under the [CC0 License](http://creativecommons.org/publicdomain/zero/1.0/).

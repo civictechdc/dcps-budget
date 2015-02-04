@@ -201,7 +201,7 @@ input[type="radio"] {
   }
 
   tbody tr {
-    &.even {
+    &.odd {
       background-color: #75858e;
     }
     &:not(.school-view-row) {
