@@ -50,6 +50,7 @@ gulp.task('data', function () {
 
 gulp.task('extras', function () {
   return gulp.src([
+    'app/CNAME',
     'app/*.*',
     '!app/*.html',
     'node_modules/apache-server-configs/dist/.htaccess'
