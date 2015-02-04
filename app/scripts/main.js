@@ -304,7 +304,7 @@
                 ' ' + this.y(2079 * 650) +
                 ')')
             .style('text-anchor', 'end')
-            .text('Funds Alotted Per Student ($2,079)');
+            .text('Funds Allotted Per Student ($2,079)');
 
         this.refresh();
     };
