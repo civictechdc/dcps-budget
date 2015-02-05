@@ -8,7 +8,7 @@ Over 30,000 students in DC Public Schools (DCPS) and public charter schools are 
 
 This new funding represents a tremendous opportunity for our schools, but it also raises questions about how these dollars should be spent and how DC can tie these resources to effective programs.
 
-According to DC law, at-risk funds are supposed to follow the student to his or her school, with school leaders determining how best to use these additional resources. But due to time constraints in the budgeting process, DCPS argued that this was not possible in the first year of at-risk funding.
+According to DC law, at-risk funds are supposed to follow the student to his or her school, with school leaders determining how best to use these additional resources. But due to time constraints in the budgeting process, DCPS argued that this process was not possible in the first year of at-risk funding, and it instead used the funds in service of existing priorities, including improving middle schools, increasing student satisfaction, and extending the school day.
 
 # Why This Tool
 
