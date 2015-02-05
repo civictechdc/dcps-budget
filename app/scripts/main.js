@@ -152,7 +152,7 @@
             .append('div')
             .attr('class', 'instruction')
             .append('h3')
-            .text('Hover over a school to view details');
+            .text('Click on a school to view details');
 
         this.mouseover = function (d) {
             that.fg.select('.bubble.school-' + d.code)

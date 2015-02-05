@@ -117,7 +117,7 @@ input[type="radio"] {
 
 #exhibit {
   overflow: hidden;
-  margin-bottom: 50px;
+  margin-bottom: 22px;
   .instruction {
     margin-top: -6px;
   }
@@ -310,13 +310,13 @@ input[type="radio"] {
 }
 
 .tooltip {
-  margin-top: -115px;
+  margin-top: -87px;
   display: none;
   width: 420px;
   position: absolute;
   background: #55656e;
   color: #fff;
-  padding: 11px 15px;
+  padding: 11px 15px 18px 15px;
   border-radius: 15px;
   border: 3px solid #d9c13f;
   font-size: 14px;
