@@ -369,16 +369,63 @@
 
         header.append('th')
             .attr('scope', 'col')
-            .text('School Name');
+            .attr('data-sort', 'name')
+            .text('School Name')
+            .append('span')
+            .attr('class', 'sort-arrow');
         header.append('th')
             .attr('scope', 'col')
-            .text('At-Risk Students');
+            .attr('data-sort', 'atRiskCount')
+            .attr('class', 'descending')
+            .text('At-Risk Students')
+            .append('span')
+            .attr('class', 'sort-arrow');
         header.append('th')
             .attr('scope', 'col')
-            .text('At-Risk Funds');
+            .attr('data-sort', 'atRiskFunds')
+            .attr('class', 'descending')
+            .text('At-Risk Funds')
+            .append('span')
+            .attr('class', 'sort-arrow');
         header.append('th')
             .attr('scope', 'col')
-            .text('Funding per Student');
+            .attr('data-sort', 'perStudentFunds')
+            .attr('class', 'selected descending')
+            .text('Funding per Student')
+            .append('span')
+            .attr('class', 'sort-arrow');
+
+        $('table.bar-chart th').click(function () {
+            var descending,
+                target = $(this),
+                key = target.data('sort'),
+                perStudentFunds = key === 'perStudentFunds';
+
+            if (!target.hasClass('selected') || key === 'name') {
+                $('table.bar-chart th').removeClass('selected');
+                target.addClass('selected');
+            } else {
+                target.toggleClass('descending');
+            }
+
+            if (target.hasClass('descending')) {
+                descending = true;
+            } else {
+                descending = false;
+            }
+
+            that.refresh(function (d) {
+                var val;
+
+                if (perStudentFunds) {
+                    val = d.atRiskFunds / d.atRiskCount;
+                } else {
+                    val = d[key];
+                }
+
+                return descending ? -val : val;
+            }, !perStudentFunds);
+        });
 
         this.tbody = this.table.append('tbody');
 
@@ -389,6 +436,10 @@
                     $(this).parent().parent().remove();
                 }
             });
+        };
+
+        this.sort = function (d) {
+            return -(d.atRiskFunds / d.atRiskCount);
         };
 
         this.click = function (d) {
@@ -428,18 +479,21 @@
         return;
     };
 
-    views.Bars.prototype.refresh = function () {
+    views.Bars.prototype.refresh = function (sort, hideAllocation) {
         this.removeSchoolViews(true);
 
-        var addAllocatedAmount = function (data) {
-                return _.sortBy(data.concat([{
+        this.sort = sort || this.sort;
+        this.hideAllocation = _.isUndefined(hideAllocation) ?
+                this.hideAllocation : hideAllocation;
+
+        var that = this,
+            addAllocatedAmount = function (data) {
+                return _.sortBy(that.hideAllocation ? data : data.concat([{
                     name: 'Allotted by Funding Formula',
                     atRiskCount: -1,
                     atRiskFunds: -2079,
                     filtered: false
-                }]), function (d) {
-                    return -(d.atRiskFunds / d.atRiskCount);
-                });
+                }]), that.sort);
             },
             maxSchool = this.data[0],
             // maxSchool = _.reject(this.data, 'filtered')[0],
@@ -463,25 +517,27 @@
             rowCount = 0;
 
         rows.enter().append('tr')
-            .attr('class', function (d) { return 'bar ' + (d.code ? 'school-' + d.code : 'allocation'); })
+            .on('click', this.click);
+
+        rows.attr('class', function (d) { return 'bar ' + (d.code ? 'school-' + d.code : 'allocation'); })
             .html(function (d) {
                 d.formattedFunds = '$' + commasFormatter(d.atRiskFunds);
                 d.perStudentFunds = '$' + commasFormatter(d.atRiskFunds / d.atRiskCount);
                 return rowTemplate(d);
             })
-            .on('click', this.click);
-
-        rows.each(function (d) {
-            d3.select(this)
-                .select('span.rect')
-                .style('width', (d.atRiskFunds / d.atRiskCount / max * 100) + '%');
-        });
+            .each(function (d) {
+                d3.select(this)
+                    .select('span.rect')
+                    .style('width', (d.atRiskFunds / d.atRiskCount / max * 100) + '%');
+            });
 
         rows.classed('filtered', function (d) { return d.filtered; })
             .classed('odd', function (d) {
                 if (!d.filtered) { rowCount += 1; }
                 return rowCount % 2 === 1;
             });
+
+        rows.exit().remove();
     };
 
     populateSchoolView = function (schoolView, d) {

@@ -196,6 +196,25 @@ input[type="radio"] {
     line-height: 1em;
   }
 
+  th {
+    cursor: pointer;
+    .sort-arrow { visibility: none; }
+    &.selected .sort-arrow {
+      visibility: visible;
+      position: relative;
+      top: 11px;
+      width: 6px;
+      margin-left: 4px;
+      border: 6px solid transparent;
+      border-top-color: #fff;
+    }
+    &.selected.descending .sort-arrow {
+      border-top-color: transparent;
+      border-bottom-color: #fff;
+      top: -11px;
+    }
+  }
+
   tr.filtered {
     display: none;
   }
