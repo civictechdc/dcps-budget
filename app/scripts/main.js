@@ -20,44 +20,22 @@
         d3.csv(DATA_PATH, function (d) {
             return {
                 name: d.SCHOOLNAME,
+                year: d.YEAR,
                 code: schoolCodeFormatter(d.SCHOOLCODE),
                 ward: d.WARD === '' ? null : d.WARD,
                 level: d.LEVEL === '' ? null : d.LEVEL,
-                enrollment: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
-                atRiskCount: d.ATRISKCOUNT === '' ? null : +d.ATRISKCOUNT,
-                atRiskFunds: d.ATRISKTOTAL === '' ? null : +d.ATRISKTOTAL,
                 fortyForty: d.FORTYFORTY,
-                budgetLines: {
-                    'Dean of Students': +d.DEANOFSTUDENTS,
-                    'In-School Suspension Coordinator': +d.ISSCOORDINATOR,
-                    'Guidance Counselor': +d.GUIDANCECOUNSELOR,
-                    'Attendance Counselor': +d.ATTENDCOUNSELOR,
-                    'Psychcologist': +d.PSYCH,
-                    'Social Worker': +d.SOCIALWORKER,
-                    'Intervention Coach': +d.INTERVENTIONCOACH,
-                    'English Teacher': +d.ENGLISHTEACHER,
-                    'Math Teacher': +d.MATHTEACHER,
-                    'Reading Teacher': +d.READINGTEACHER,
-                    'Resource Teacher': +d.RESOURCETEACHER,
-                    'Science Teacher': +d.SCIENCETEACHER,
-                    'Social Studies Teacher': +d.SOCIALSTUDIESTEACHER,
-                    'Art Teacher': +d.ARTTEACHER,
-                    'Health/PE Teacher': +d.HEALTHTEACHER,
-                    'Music Teacher': +d.MUSICTEACHER,
-                    'World Language Teacher': +d.LANGUAGETEACHER,
-                    'Special Education Teacher': +d.SPEDTEACHER,
-                    'Special Education Aide': +d.SPEDAIDE,
-                    'Behavior Technician': +d.BEHAVIORTECH,
-                    'Assistant Principal for Intervention': +d.ASSTPRINCIPALINTERVENTION,
-                    'Reading Specialist': +d.READINGSPECIALIST,
-                    'Assistant Principal for Literacy': +d.ASSTPRINCIPALLITERACY,
-                    'Proving What\'s Possible for Student Satisfaction Award': +d.PWPSTUDENTSATISFACTION,
-                    'Extended Day Funds': +d.EXTENDEDDAY,
-                    'Middle Grade Excursions and Activities': +d.MIDDLEGRADEACTIVITIES,
-                    'Evening Credit Recovery': +d.ECR,
-                    'Other Funds': +d.OTHER,
-                    'New Heights Teen Parent Program': +d.NEWHEIGHTS,
-                    'Reading Partners Program': +d.READINGPARTNERS
+                enrollment: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
+                atRiskCount: d.ATRISKENROLLMENT === '' ? null : +d.ATRISKENROLLMENT,
+                budget: {
+                    enrollment: d.ENROLLMENTFUNDS
+                    specialty: d.SPECIALTY
+                    perpupilmin: d.PERPUPILMIN
+                    stabilization: d.STABILIZATION
+                    sped: d.SPED
+                    ell: d.ELL
+                    atrisk: d.ATRISK
+                    income: d.INCOME
                 }
             };
         }, app.initialize);
