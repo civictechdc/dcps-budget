@@ -11,7 +11,7 @@
 
         DATA_PATH = 'data/data.csv',
 
-        CURRENT_YEAR = "2016",
+        CURRENT_YEAR = 2016,
 
         commasFormatter = d3.format(',.0f'),
         schoolCodeFormatter = d3.format('04d');
@@ -20,26 +20,30 @@
         d3.csv(DATA_PATH, function (d) {
             var row = {
                 name: d.SCHOOLNAME,
-                year: d.YEAR,
+                year: +d.YEAR,
                 code: schoolCodeFormatter(d.SCHOOLCODE),
                 ward: d.WARD === '' ? null : d.WARD,
                 level: d.LEVEL === '' ? null : d.LEVEL,
                 fortyForty: d.FORTYFORTY,
-                enrollment: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
-                atRiskCount: d.ATRISKENROLLMENT === '' ? null : +d.ATRISKENROLLMENT,
-                budget: {}
+                budget: {},
+                enrollment: {}
             };
 
-            row.budget[d.YEAR] = {
-                enrollment: d.ENROLLMENTFUNDS,
-                specialty: d.SPECIALTY,
-                perpupilmin: d.PERPUPILMIN,
-                stabilization: d.STABILIZATION,
-                sped: d.SPED,
-                ell: d.ELL,
-                atrisk: d.ATRISK,
-                income: d.INCOME
-            }
+            row.budget[d.YEAR] = [
+                { category: "enrollment", value: +d.ENROLLMENTFUNDS },
+                { category: "specialty", value: +d.SPECIALTY },
+                { category: "perpupilmin", value: +d.PERPUPILMIN },
+                { category: "stabilization", value: +d.STABILIZATION },
+                { category: "sped", value: +d.SPED },
+                { category: "ell", value: +d.ELL },
+                { category: "atrisk", value: +d.ATRISK },
+                { category: "income", value: +d.INCOME }
+            ];
+
+            row.enrollment[d.YEAR] = {
+                total: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
+                atRisk: d.ATRISKENROLLMENT === '' ? null : +d.ATRISKENROLLMENT,
+            };
 
             return row;
         }, app.initialize);
@@ -58,17 +62,20 @@
                 return false;
             });
 
-            app.data = _.filter(data, {year: CURRENT_YEAR});
+            var partition = _.partition(data, {year: CURRENT_YEAR});
 
-            _(data).reject({year: CURRENT_YEAR}).each(function (row) {
+            app.data = partition[0];
+
+            _.each(partition[1], function (row) {
                 var school = _.find(app.data, function (school) {
                     return school.code === row.code;
                 });
 
-                school.budget[row.year] = row.budget;
+                school.budget[row.year] = row.budget[row.year];
             });
 
             app.filterData({});
+            app.setCategory('gened');
 
             app.loadView('Bars');
 
@@ -89,24 +96,61 @@
 
                 app.filterData(filter);
             });
+
+            $('#categories').change(function (e) {
+                app.setCategory($(e.target).attr('value'));
+            });
         },
 
         filterData: function (filter) {
-            var data = _(app.data).forEach(function (school) {
-                school.filtered = false;
+            var test = _.matches(filter);
+
+            _.each(app.data, function (school) {
+                school.filtered = !_.isEmpty(filter) && !test(school);
             });
 
-            if (!_.isEmpty(filter)) {
-                data.reject(filter).forEach(function (school) {
-                    school.filtered = true;
+            if (app.view) { app.view.refresh(); }
+        },
+
+        setCategory: function (category) {
+            var includedCategories = category === 'gened' ?
+                ['enrollment', 'specialty', 'perpupilmin', 'stabilization'] :
+                [category];
+
+            _.each(app.data, function (school) {
+                school.selected = {}
+                _.each(school.budget, function (lines, year) {
+                    var partition = _.partition(lines, function (line) {
+                        return _.includes(includedCategories, line.category);
+                    }),
+                        sum = function (sum, line) {
+                            return sum + line.value;
+                        },
+                        selected = {};
+
+                    selected.lines = partition[0];
+                    selected.total = _.reduce(selected.lines, sum, 0);
+                    selected.lines.push({
+                        category: 'other',
+                        value: _.reduce(partition[1], sum, 0)
+                    });
+                    selected.fullBudget = _.reduce(selected.lines, sum, 0);
+
+                    school.selected[year] = selected;
                 });
-            }
+
+                school.change = null;
+                if (_.has(school.selected), CURRENT_YEAR - 1) {
+                    school.change = (school.selected[CURRENT_YEAR].total -
+                        school.selected[CURRENT_YEAR - 1].total) /
+                        school.selected[CURRENT_YEAR].total;
+                }
+            });
 
             if (app.view) { app.view.refresh(); }
         },
 
         loadView: function (view) {
-            clearTimeout(window.quickUglyGlobalTimeout);
             $('#exhibit').empty();
             $('#school-view').hide();
             app.view = new views[view](app.data);
@@ -123,17 +167,14 @@
 
         this.$el = $('#exhibit');
 
-        this.$el.css('overflow', 'visible');
-
-        this.data = data;
-        this.data = _.sortBy(this.data, function (d) {
-            return -(d.atRiskFunds / d.atRiskCount);
+        this.data = _.sortBy(data, function (d) {
+            return -(d.selected[CURRENT_YEAR].fullBudget / d.enrollment[CURRENT_YEAR].total);
         });
 
         this.table = d3.select('#exhibit')
             .append('table')
             .attr('class', 'bar-chart')
-            .attr('summary', 'DCPS schools sorted by funding recieved per at-risk student');
+            .attr('summary', 'Schools by the funding per student');
 
         header = this.table.append('thead')
             .append('tr');
@@ -146,31 +187,30 @@
             .attr('class', 'sort-arrow');
         header.append('th')
             .attr('scope', 'col')
-            .attr('data-sort', 'atRiskCount')
+            .attr('data-sort', 'enrollment')
             .attr('class', 'descending')
-            .text('At-Risk Students')
+            .text('Enrollment')
             .append('span')
             .attr('class', 'sort-arrow');
         header.append('th')
             .attr('scope', 'col')
-            .attr('data-sort', 'atRiskFunds')
-            .attr('class', 'descending')
-            .text('At-Risk Funds')
-            .append('span')
-            .attr('class', 'sort-arrow');
-        header.append('th')
-            .attr('scope', 'col')
-            .attr('data-sort', 'perStudentFunds')
+            .attr('data-sort', 'budget')
             .attr('class', 'selected descending')
-            .text('Funding per Student')
+            .text('Funds per Student')
+            .append('span')
+            .attr('class', 'sort-arrow');
+        header.append('th')
+            .attr('scope', 'col')
+            .attr('data-sort', 'change')
+            .attr('class', 'descending')
+            .text('Change')
             .append('span')
             .attr('class', 'sort-arrow');
 
         $('table.bar-chart th').click(function () {
             var descending,
                 target = $(this),
-                key = target.data('sort'),
-                perStudentFunds = key === 'perStudentFunds';
+                key = target.data('sort');
 
             if (!target.hasClass('selected') || key === 'name') {
                 $('table.bar-chart th').removeClass('selected');
@@ -179,23 +219,24 @@
                 target.toggleClass('descending');
             }
 
-            if (target.hasClass('descending')) {
-                descending = true;
-            } else {
-                descending = false;
-            }
+            descending = target.hasClass('descending');
 
             that.refresh(function (d) {
                 var val;
 
-                if (perStudentFunds) {
-                    val = d.atRiskFunds / d.atRiskCount;
-                } else {
+                switch (key) {
+                case 'budget':
+                    val = d.selected[CURRENT_YEAR].total / d.enrollment[CURRENT_YEAR].total;
+                    break;
+                case 'enrollment':
+                    val = d.enrollment[CURRENT_YEAR].total;
+                    break;
+                default:
                     val = d[key];
                 }
 
                 return descending ? -val : val;
-            }, !perStudentFunds);
+            });
         });
 
         this.tbody = this.table.append('tbody');
@@ -210,7 +251,7 @@
         };
 
         this.sort = function (d) {
-            return -(d.atRiskFunds / d.atRiskCount);
+            return -(d.selected[CURRENT_YEAR].total / d.enrollment[CURRENT_YEAR].total);
         };
 
         this.click = function (d) {
@@ -250,56 +291,50 @@
         return;
     };
 
-    views.Bars.prototype.refresh = function (sort, hideAllocation) {
+    views.Bars.prototype.refresh = function (sort) {
         this.removeSchoolViews(true);
 
         this.sort = sort || this.sort;
-        this.hideAllocation = _.isUndefined(hideAllocation) ?
-                this.hideAllocation : hideAllocation;
 
         var that = this,
-            addAllocatedAmount = function (data) {
-                return _.sortBy(that.hideAllocation ? data : data.concat([{
-                    name: 'Allotted by Funding Formula',
-                    atRiskCount: -1,
-                    atRiskFunds: -2079,
-                    filtered: false
-                }]), that.sort);
-            },
             maxSchool = this.data[0],
-            // maxSchool = _.reject(this.data, 'filtered')[0],
-            max = maxSchool.atRiskFunds / maxSchool.atRiskCount,
+            max = maxSchool.selected[CURRENT_YEAR].fullBudget /
+                maxSchool.enrollment[CURRENT_YEAR].total,
             rows = this.tbody.selectAll('tr.bar')
-                .data(addAllocatedAmount(this.data)),
+                .data(_.sortBy(this.data, this.sort)),
             rowTemplate = _.template(
                 '<td><%= name %></td>' +
-                    '<td><%= atRiskCount > 0 ? atRiskCount : "" %></td>' +
-                    '<td><%= atRiskFunds > 0 ? formattedFunds : "" %></td>' +
+                    '<td><%= enrollment[CURRENT_YEAR].total %></td>' +
                     '<td>' +
                     '<div class="wrapper">' +
-                    '<span class="line" style="left: ' + (2079 / max * 100) + '%;"></span>' +
                     '<div class="bar">' +
-                    '<span class="rect"></span>' +
-                    '<%= perStudentFunds %>' +
+                    '<span class="label">' +
+                    '<%= "$" + commasFormatter(selected[CURRENT_YEAR].total / enrollment[CURRENT_YEAR].total) %>' +
+                    '</span>' +
+                    '<% _.each(selected[CURRENT_YEAR].lines, function (line) { %>' +
+                    '<span ' +
+                    'class="rect <%= line.category %>" ' +
+                    'style="width: <%= (line.value / enrollment[CURRENT_YEAR].total) / max * 100 %>%;">' +
+                    '</span>' +
+                    '<% }); %>' +
                     '</div>' +
                     '</div>' +
-                    '</td>'
+                    '</td>' +
+                    '<td><%= (change * 100).toFixed(1) + "%" %></td>',
+                    { 'imports': {
+                        'commasFormatter': commasFormatter,
+                        'CURRENT_YEAR': CURRENT_YEAR,
+                        'max': max
+                    }}
             ),
             rowCount = 0;
 
         rows.enter().append('tr')
             .on('click', this.click);
 
-        rows.attr('class', function (d) { return 'bar ' + (d.code ? 'school-' + d.code : 'allocation'); })
+        rows.attr('class', function (d) { return 'bar school-' + d.code; })
             .html(function (d) {
-                d.formattedFunds = '$' + commasFormatter(d.atRiskFunds);
-                d.perStudentFunds = '$' + commasFormatter(d.atRiskFunds / d.atRiskCount);
                 return rowTemplate(d);
-            })
-            .each(function (d) {
-                d3.select(this)
-                    .select('span.rect')
-                    .style('width', (d.atRiskFunds / d.atRiskCount / max * 100) + '%');
             });
 
         rows.classed('filtered', function (d) { return d.filtered; })
@@ -395,9 +430,6 @@
         this.margin = {top: 120, right: 20, bottom: 40, left: 60};
         this.data = data;
         this.$el = $('#exhibit');
-
-        this.$el.css('overflow', 'visible');
-        window.quickUglyGlobalTimeout = setTimeout(function () { that.$el.css('overflow', 'hidden'); }, 900);
 
         this.x = d3.scale.linear().domain([0, 650]);
         this.y = d3.scale.linear().domain([0, MAX]);

@@ -123,7 +123,6 @@ input[type="radio"] {
 }
 
 #exhibit {
-  overflow: hidden;
   margin-bottom: 22px;
   .instruction {
     margin-top: -6px;
@@ -238,7 +237,7 @@ input[type="radio"] {
 
       td {
         font-size: 14px;
-        &:last-child {
+        &:nth-child(3) {
           width: 100%;
           font-weight: 700;
           position: relative;
@@ -284,12 +283,17 @@ input[type="radio"] {
     }
   }
 
+  span.label {
+    display: inline-block;
+    width: 64px;
+  }
+
   span.rect {
     background: #d9c13f;
     display: inline-block;
     height: 11px;
-    margin-right: 6px;
-    border-radius: 2px;
+
+    &.other { background: #55656e}
   }
 
   tr.allocation {
@@ -298,22 +302,22 @@ input[type="radio"] {
     span.rect { background: #fff; }
   }
 
-  @media screen and (max-width: 767px) {
-    td:nth-child(3), th:nth-child(3) {
-      display: none;
-    }
-  }
+  // @media screen and (max-width: 767px) {
+  //   td:nth-child(3), th:nth-child(3) {
+  //     display: none;
+  //   }
+  // }
 
-  @media screen and (max-width: 599px) {
-    td:nth-child(2), th:nth-child(2) {
-      display: none;
-    }
-    span.rect, span.line { display: none }
-    td, th {
-      white-space: normal;
-      width: 50%;
-    }
-  }
+  // @media screen and (max-width: 599px) {
+  //   td:nth-child(2), th:nth-child(2) {
+  //     display: none;
+  //   }
+  //   span.rect, span.line { display: none }
+  //   td, th {
+  //     white-space: normal;
+  //     width: 50%;
+  //   }
+  // }
 }
 
 .tooltip {
