@@ -202,6 +202,10 @@ input[type="radio"] {
     line-height: 1em;
   }
 
+  tr:not(.school-view-row) td {
+    height: 44px;
+  }
+
   th {
     cursor: pointer;
     .sort-arrow { visibility: none; }
@@ -239,7 +243,6 @@ input[type="radio"] {
         font-size: 14px;
         &:nth-child(3) {
           width: 100%;
-          font-weight: 700;
           position: relative;
         }
       }
@@ -250,7 +253,7 @@ input[type="radio"] {
     position: absolute;
     top: 0;
     left: 11px;
-    right: 68px;
+    right: 120px;
   }
 
   div.bar {
@@ -258,6 +261,11 @@ input[type="radio"] {
     display: block;
     position: relative;
     top: 6px;
+    margin-bottom: 4px;
+
+    &.previous-year {
+      opacity: 0.6;
+    }
   }
 
   span.line {
@@ -286,6 +294,8 @@ input[type="radio"] {
   span.label {
     display: inline-block;
     width: 64px;
+    font-weight: 700;
+    margin-left: 4px;
   }
 
   span.rect {

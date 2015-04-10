@@ -72,6 +72,7 @@
                 });
 
                 school.budget[row.year] = row.budget[row.year];
+                school.enrollment[row.year] = row.enrollment[row.year];
             });
 
             app.filterData({});
@@ -308,6 +309,7 @@
                     '<td>' +
                     '<div class="wrapper">' +
                     '<div class="bar">' +
+                    '<%= CURRENT_YEAR + ": " %>' +
                     '<span class="label">' +
                     '<%= "$" + commasFormatter(selected[CURRENT_YEAR].total / enrollment[CURRENT_YEAR].total) %>' +
                     '</span>' +
@@ -315,6 +317,18 @@
                     '<span ' +
                     'class="rect <%= line.category %>" ' +
                     'style="width: <%= (line.value / enrollment[CURRENT_YEAR].total) / max * 100 %>%;">' +
+                    '</span>' +
+                    '<% }); %>' +
+                    '</div>' +
+                    '<div class="bar previous-year">' +
+                    '<%= CURRENT_YEAR - 1 + ": " %>' +
+                    '<span class="label">' +
+                    '<%= "$" + commasFormatter(selected[CURRENT_YEAR - 1].total / enrollment[CURRENT_YEAR - 1].total) %>' +
+                    '</span>' +
+                    '<% _.each(selected[CURRENT_YEAR - 1].lines, function (line) { %>' +
+                    '<span ' +
+                    'class="rect <%= line.category %>" ' +
+                    'style="width: <%= (line.value / enrollment[CURRENT_YEAR - 1].total) / max * 100 %>%;">' +
                     '</span>' +
                     '<% }); %>' +
                     '</div>' +
