@@ -363,7 +363,7 @@
     populateSchoolView = function (schoolView, d) {
         var budgetLines = schoolView.selectAll('ul.field.budgetlines'),
             pieChart = schoolView.selectAll('div.chart'),
-            percent = d.atRiskCount / d.enrollment,
+            percent = d.enrollment[CURRENT_YEAR].atRisk / d.enrollment[CURRENT_YEAR].total,
             radius = 35,
             pie = d3.layout.pie().sort(null),
             arc = d3.svg.arc()
@@ -373,9 +373,9 @@
         schoolView.selectAll('.field.schoolname')
             .text(d.name);
         schoolView.selectAll('.field.atriskcount')
-            .text(d.atRiskCount);
+            .text(d.enrollment[CURRENT_YEAR].atRisk);
         schoolView.selectAll('.field.enrollment')
-            .text(d.enrollment);
+            .text(d.enrollment[CURRENT_YEAR].total);
         schoolView.selectAll('.field.atriskfunds')
             .text('$' + commasFormatter(d.atRiskFunds));
         schoolView.selectAll('.field.byformulafunds')

@@ -232,12 +232,12 @@ input[type="radio"] {
 
   tbody tr {
     &.odd {
-      background-color: #c1c9d0;
+      background-color: #d4d5d6;
     }
     &:not(.school-view-row) {
       cursor: pointer;
       &:hover {
-        background: #9ca6a8;
+        background: #c1c9d0;
       }
 
       td {
@@ -394,8 +394,7 @@ input[type="radio"] {
 
 .school-view {
   display: none;
-  background: #738184;
-  color: #fff;
+  background: #c1c9d0;
   margin: 0 -13px;
   padding: 0 24px;
   position: relative;
@@ -441,13 +440,13 @@ input[type="radio"] {
 
   .amount {
     font-weight: 700;
-    color: #2b899d;
-    fill: #2b899d;
+    color: #1b798d;
+    fill: #1b798d;
   }
 
   .comparison {
     font-size: 13px;
-    color: #b5c5ce;
+    color: #536164;
   }
 
   div.chart {
@@ -466,13 +465,13 @@ input[type="radio"] {
 
 a.button {
   display: block;
-  color: #2b899d;
+  color: #1b798d;
   font-weight: 300;
   border: 1px solid #2b899d;
   text-align: center;
   border-radius: 5px;
   &:hover {
-    background: rgba(217, 193, 63, .15);
+    background: rgba(49, 137, 156, .15);
   }
   &.learndc {
     width: 180px;
