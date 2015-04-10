@@ -9,8 +9,8 @@ html {
 }
 
 body {
-  background: #85959e;
-  color: #1a1e20;
+  background: #e4e5e6;
+  color: #343536;
   font-family: 'Lato', Helvetica, Arial, sans-serif;
   font-size: 17px;
   line-height: 1.5em;
@@ -61,7 +61,7 @@ strong {
   width: 320px; height: 250px;
   padding: 0 15px;
   text-align: left;
-  color: #fff;
+  color: #343536;
 }
 
 #main {
@@ -92,9 +92,9 @@ header p.what {
   font-size: 13px;
   margin: 0 0 30px 0;
   font-weight: 700;
-  color: #65757e;
+  color: #9ca6a8;
   a {
-    color: #f0d95b;
+    color: #1b798d;
     font-weight: 400;
     &:hover { text-decoration: underline; }
   }
@@ -102,6 +102,7 @@ header p.what {
 
 form {
   line-height: 2em;
+  margin-bottom: 11px;
 }
 
 input[type="radio"] {
@@ -110,14 +111,14 @@ input[type="radio"] {
     white-space: nowrap;
     padding: 3px 11px;
     margin: 0 1px;
-    background: #75858e;
+    background: #c1c9d0;
     border-radius: 5px;
     &:hover {
-      background: #65757e;
+      background: #9ca6a8;
     }
   }
   &:checked + label {
-    background: #55656e;
+    background: #738184;
     color: #fff;
   }
 }
@@ -165,7 +166,7 @@ input[type="radio"] {
   circle.bubble {
     fill: #afab6e;
     fill: rgba(217,193,63,.5);
-    stroke: #d9c13f;
+    stroke: #2b899d;
     stroke-width: 1px;
     -webkit-transition: opacity 300ms;
     -moz-transition: opacity 300ms;
@@ -173,7 +174,7 @@ input[type="radio"] {
     -o-transition: opacity 300ms;
     transition: opacity 300ms;
     &.highlighted {
-      fill: #d9c13f;
+      fill: #2b899d;
     }
     &.disabled {
       opacity: .25;
@@ -192,7 +193,7 @@ input[type="radio"] {
   margin: 25px -8px 0 -8px;
 
   thead {
-    background: #55656e;
+    background: #738184;
     color: #fff;
   }
 
@@ -231,12 +232,12 @@ input[type="radio"] {
 
   tbody tr {
     &.odd {
-      background-color: #75858e;
+      background-color: #c1c9d0;
     }
     &:not(.school-view-row) {
       cursor: pointer;
       &:hover {
-        background: #65757e;
+        background: #9ca6a8;
       }
 
       td {
@@ -299,15 +300,14 @@ input[type="radio"] {
   }
 
   span.rect {
-    background: #d9c13f;
+    background: #2b899d;
     display: inline-block;
     height: 11px;
 
-    &.enrollment { background: #75D661}
-    &.specialty { background: #CAD647}
-    &.perpupilmin { background: #748E43}
-    &.stabilization { background: #BED38F}
-    &.other { background: #55656e}
+    &.specialty { background: #3C5366}
+    &.perpupilmin { background: #72ADAC}
+    &.stabilization { background: #467883}
+    &.other { background: #9aa6a8}
   }
 
   tr.allocation {
@@ -339,25 +339,25 @@ input[type="radio"] {
   display: none;
   width: 420px;
   position: absolute;
-  background: #55656e;
+  background: #738184;
   color: #fff;
   padding: 11px 15px 18px 15px;
   border-radius: 15px;
-  border: 3px solid #d9c13f;
+  border: 3px solid #2b899d;
   font-size: 14px;
   z-index: 1000;
   -moz-box-shadow:    0 5px 8px rgba(26, 30, 32, .25);
   -webkit-box-shadow: 0 5px 8px rgba(26, 30, 32, .25);
   box-shadow:         0 5px 8px rgba(26, 30, 32, .25);
   h3 {
-    color: #d9c13f;
+    color: #2b899d;
     font-size: 21px;
     margin: 5px 0 11px 0;
   }
   p {
     margin: 0;
     &.instruction {
-      color: #d9c13f;
+      color: #2b899d;
       margin: 8px 0 4px 0;
       font-weight: 300;
     }
@@ -370,14 +370,14 @@ input[type="radio"] {
     height: 0;
     border-left: 15px solid transparent;
     border-right: 15px solid transparent;
-    border-bottom: 15px solid #d9c13f;
+    border-bottom: 15px solid #2b899d;
   }
   .arrow {
     top: -18px;
     &:after {
       top: 5px;
       left: -15px;
-      border-bottom-color: #55656e;
+      border-bottom-color: #738184;
     }
   }
 }
@@ -394,7 +394,7 @@ input[type="radio"] {
 
 .school-view {
   display: none;
-  background: #55656e;
+  background: #738184;
   color: #fff;
   margin: 0 -13px;
   padding: 0 24px;
@@ -441,8 +441,8 @@ input[type="radio"] {
 
   .amount {
     font-weight: 700;
-    color: #d9c13f;
-    fill: #d9c13f;
+    color: #2b899d;
+    fill: #2b899d;
   }
 
   .comparison {
@@ -456,9 +456,9 @@ input[type="radio"] {
     float: left;
     margin: -1px 13px -2px -1px;
     path.arc {
-      fill: #85959e;
+      fill: #e4e5e6;
       &:first-child {
-        fill: #d9c13f;
+        fill: #2b899d;
       }
     }
   }
@@ -466,9 +466,9 @@ input[type="radio"] {
 
 a.button {
   display: block;
-  color: #d9c13f;
+  color: #2b899d;
   font-weight: 300;
-  border: 1px solid #d9c13f;
+  border: 1px solid #2b899d;
   text-align: center;
   border-radius: 5px;
   &:hover {
@@ -493,7 +493,7 @@ button.close {
   right: 15px;
   cursor: pointer;
   &:hover {
-    color: #d9c13f;
+    color: #2b899d;
   }
 }
 
@@ -502,12 +502,12 @@ button.close {
   max-width: 822px;
   margin: 0 auto;
   p { max-width: 540px; }
-  h4 { color: #f0d95b; border-top: 2px solid #f0d95b; margin-top: 3em; }
-  h5 { color: #35454e; border-top: 2px solid #65757e; margin-top: 4.5em; }
+  h4 { color: #2b899d; border-top: 2px solid #2b899d; margin-top: 3em; }
+  h5 { color: #35454e; border-top: 2px solid #9ca6a8; margin-top: 4.5em; }
   a.button {
     width: 280px;
-    color: #f0d95b;
-    border-color: #f0d95b;
+    color: #2b899d;
+    border-color: #2b899d;
   }
   p.logos {
     text-align: center;
@@ -533,7 +533,7 @@ button.close {
   font-size: 10px;
 
   & > div {
-    background-color: #ddd;
+    background-color: #343536;
     height: 100%;
     width: 3px;
     display: inline-block;
