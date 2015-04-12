@@ -567,12 +567,15 @@
         interactionLines = this.interactionLayer.selectAll('.interaction-line')
             .data(function (d) { return _.reject(d.values, 'filtered'); });
 
-        interactionLines.remove();
-
         interactionLines.enter().append('line')
             .attr('class', 'interaction-line')
             .attr('x1', 0)
             .attr('x2', this.width)
+            .on('mouseover', this.mouseover)
+            .on('mouseout', this.mouseout)
+            .on('click', this.click);
+
+        interactionLines
             .attr('y1', function (d) {
                 return that.y(d.selected[CURRENT_YEAR - 1].total /
                     d.enrollment[CURRENT_YEAR - 1].total);
@@ -580,10 +583,9 @@
             .attr('y2', function (d) {
                 return that.y(d.selected[CURRENT_YEAR].total /
                     d.enrollment[CURRENT_YEAR].total);
-            })
-            .on('mouseover', this.mouseover)
-            .on('mouseout', this.mouseout)
-            .on('click', this.click);
+            });
+
+        interactionLines.exit().remove();
     };
 
     populateSchoolView = function (schoolView, d) {
