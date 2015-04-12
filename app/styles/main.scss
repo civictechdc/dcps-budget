@@ -143,6 +143,11 @@ input[type="radio"] {
   .instruction {
     margin-top: -6px;
   }
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 }
 
 .slopegraph.chart {
@@ -161,12 +166,18 @@ input[type="radio"] {
   .line {
     stroke: #2b899d;
     stroke-width: 2px;
-    opacity: 0.67;
-
-    -webkit-transition: opacity 400ms;
-    transition: opacity 400ms;
+    opacity: 0.5;
 
     &.filtered { opacity: 0.1; }
+    &.highlighted {
+      opacity: 1;
+      stroke-width: 5px;
+    }
+  }
+  .interaction-line {
+    stroke-width: 5px;
+    stroke: #000;
+    opacity: 0;
   }
 }
 
@@ -359,7 +370,7 @@ input[type="radio"] {
 }
 
 .tooltip {
-  margin-top: -87px;
+  margin-top: -44px;
   display: none;
   width: 420px;
   position: absolute;
@@ -374,7 +385,6 @@ input[type="radio"] {
   -webkit-box-shadow: 0 5px 8px rgba(26, 30, 32, .25);
   box-shadow:         0 5px 8px rgba(26, 30, 32, .25);
   h3 {
-    color: #2b899d;
     font-size: 21px;
     margin: 5px 0 11px 0;
   }

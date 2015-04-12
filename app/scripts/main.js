@@ -440,6 +440,15 @@
 
             var tooltip = d3.select('#tooltip');
 
+            tooltip.selectAll('.field.schoolname')
+                .text(d.name);
+            tooltip.selectAll('.field.current-total')
+                .text('$' + commasFormatter(d.selected[CURRENT_YEAR].total /
+                    d.enrollment[CURRENT_YEAR].total));
+            tooltip.selectAll('.field.previous-total')
+                .text('$' + commasFormatter(d.selected[CURRENT_YEAR - 1].total /
+                    d.enrollment[CURRENT_YEAR - 1].total));
+
             tooltip.style('display', 'block');
         };
 
@@ -486,7 +495,9 @@
     views.Lines.prototype.resize = function () {
         this.width = this.$el.children().first().width() -
             this.margin.left - this.margin.right;
-        this.height = 400 - this.margin.top - this.margin.bottom,
+        this.height = 400 - this.margin.top - this.margin.bottom;
+
+        this.pageWidth = this.$el.width();
 
         this.svg
             .attr('width', this.width + this.margin.left + this.margin.right)
@@ -498,7 +509,7 @@
     };
 
     views.Lines.prototype.refresh = function () {
-        var leftAxis, rightAxis, lines,
+        var leftAxis, rightAxis, lines, interactionLines,
             max = _.reduce(_(this.data).values().pluck('values').flatten().value(),
                 function (max, d) {
                     var maxTotal = Math.max(
@@ -536,7 +547,7 @@
             .data(function (d) { return d.values; });
 
         lines.enter().append('line')
-            .attr('class', 'line')
+            .attr('class', function (d) { return 'line school-' + d.code; })
             .attr('x1', 0)
             .attr('x2', this.width);
 
@@ -552,6 +563,27 @@
                 return that.y(d.selected[CURRENT_YEAR].total /
                     d.enrollment[CURRENT_YEAR].total);
             });
+
+        interactionLines = this.interactionLayer.selectAll('.interaction-line')
+            .data(function (d) { return _.reject(d.values, 'filtered'); });
+
+        interactionLines.remove();
+
+        interactionLines.enter().append('line')
+            .attr('class', 'interaction-line')
+            .attr('x1', 0)
+            .attr('x2', this.width)
+            .attr('y1', function (d) {
+                return that.y(d.selected[CURRENT_YEAR - 1].total /
+                    d.enrollment[CURRENT_YEAR - 1].total);
+            })
+            .attr('y2', function (d) {
+                return that.y(d.selected[CURRENT_YEAR].total /
+                    d.enrollment[CURRENT_YEAR].total);
+            })
+            .on('mouseover', this.mouseover)
+            .on('mouseout', this.mouseout)
+            .on('click', this.click);
     };
 
     populateSchoolView = function (schoolView, d) {
