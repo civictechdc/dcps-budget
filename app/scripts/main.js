@@ -115,29 +115,39 @@
 
         setCategory: function (category) {
             var includedCategories = category === 'gened' ?
-                ['enrollment', 'specialty', 'perpupilmin', 'stabilization'] :
-                [category];
+                    ['enrollment', 'specialty', 'perpupilmin', 'stabilization'] :
+                    [category],
+                sum = function (sum, line) {
+                    return sum + line.value;
+                };
 
             _.each(app.data, function (school) {
                 school.selected = {}
                 _.each(school.budget, function (lines, year) {
-                    var partition = _.partition(lines, function (line) {
-                        return _.includes(includedCategories, line.category);
-                    }),
-                        sum = function (sum, line) {
-                            return sum + line.value;
-                        },
-                        selected = {};
+                    if (category === 'total') {
+                        var total = _.reduce(lines, sum, 0);
 
-                    selected.lines = partition[0];
-                    selected.total = _.reduce(selected.lines, sum, 0);
-                    selected.lines.push({
-                        category: 'other',
-                        value: _.reduce(partition[1], sum, 0)
-                    });
-                    selected.fullBudget = _.reduce(selected.lines, sum, 0);
+                        school.selected[year] = {
+                            lines: [{ category: 'total', value: total }],
+                            total: total,
+                            fullBudget: total
+                        }
+                    } else {
+                        var partition = _.partition(lines, function (line) {
+                            return _.includes(includedCategories, line.category);
+                        }),
+                            selected = {};
 
-                    school.selected[year] = selected;
+                        selected.lines = partition[0];
+                        selected.total = _.reduce(selected.lines, sum, 0);
+                        selected.lines.push({
+                            category: 'other',
+                            value: _.reduce(partition[1], sum, 0)
+                        });
+                        selected.fullBudget = _.reduce(selected.lines, sum, 0);
+
+                        school.selected[year] = selected;
+                    }
                 });
 
                 school.change = null;
