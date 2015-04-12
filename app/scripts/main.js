@@ -102,8 +102,11 @@
                 }
             }
 
+            checkLegendVisibility();
+
             $('#views').change(function (e) {
                 app.loadView($(e.target).attr('value'));
+                checkLegendVisibility();
             });
 
             $('#filters').change(function () {
@@ -116,7 +119,6 @@
                 });
 
                 app.filterData(filter);
-                checkLegendVisibility();
             });
 
             $('#categories').change(function (e) {
@@ -400,72 +402,50 @@
     };
 
     views.Lines = function (data) {
-        this.resize();
-    };
+        var that = this,
+            labels = {es: 'Elementary', ms: 'Middle', hs: 'High', campus: 'Education Campus'};
 
-    views.Lines.prototype.resize = function () {
-        this.refresh();
-    };
-
-    views.Lines.prototype.refresh = function () {
-    };
-
-    views.Bubbles = function (data) {
-        var that = this;
-
-        this.margin = {top: 120, right: 20, bottom: 40, left: 60};
-        this.data = data;
+        this.margin = {top: 6, right: 2, bottom: 38, left: 42};
+        this.data = d3.nest()
+            .key(function (d) { return d.level; })
+            .entries(_.reject(data, { 'level': null }));
+        this.data = _.sortBy(this.data, function (level) {
+            return _.indexOf(['es', 'ms', 'hs', 'campus'], level.key);
+        });
         this.$el = $('#exhibit');
 
-        this.x = d3.scale.linear().domain([0, 650]);
-        this.y = d3.scale.linear().domain([0, MAX]);
+        this.y = d3.scale.linear();
 
-        this.svg = d3.select('#exhibit').append('svg')
-            .attr('class', 'bubble chart');
+        this.multiples = d3.select('#exhibit').selectAll('.multiple')
+            .data(this.data)
+            .enter().append('div')
+            .attr('class', function (d) { return 'multiple ' + d.key; });
+
+        this.multiples.append('span')
+            .attr('class', 'title')
+            .text(function (d) { return labels[d.key]; });
+
+        this.svg = this.multiples.append('svg')
+            .attr('class', 'slopegraph chart');
         this.g = this.svg.append('g')
             .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
-        this.bg = this.g.append('g');
         this.fg = this.g.append('g');
+        this.bg = this.g.append('g');
         this.interactionLayer = this.g.append('g');
 
-        d3.select('#exhibit')
-            .append('div')
-            .attr('class', 'instruction')
-            .append('h3')
-            .text('Click on a school to view details');
-
         this.mouseover = function (d) {
-            that.fg.select('.bubble.school-' + d.code)
-                .classed('highlighted', true)
-                .transition()
-                .ease('elastic')
-                .duration(900)
-                .attr('r', 18);
+            that.fg.select('.line.school-' + d.code)
+                .classed('highlighted', true);
 
             var tooltip = d3.select('#tooltip');
-
-            tooltip.selectAll('.field.schoolname')
-                .text(d.name);
-            tooltip.selectAll('.field.atriskcount')
-                .text(d.atRiskCount);
-            tooltip.selectAll('.field.atriskpercent')
-                .text((d.atRiskCount / d.enrollment * 100).toFixed(0));
-            tooltip.selectAll('.field.atriskfunds')
-                .text('$' + commasFormatter(d.atRiskFunds));
-            tooltip.selectAll('.field.perstudentfunds')
-                .text('$' + commasFormatter(d.atRiskFunds / d.atRiskCount));
 
             tooltip.style('display', 'block');
         };
 
         this.mouseout = function (d) {
-            that.fg.select('.bubble.school-' + d.code)
-                .classed('highlighted', false)
-                .transition()
-                .ease('elastic')
-                .duration(900)
-                .attr('r', 6);
+            that.fg.select('.line.school-' + d.code)
+                .classed('highlighted', false);
 
             d3.select('#tooltip').style('display', 'none');
         };
@@ -478,7 +458,7 @@
             });
         };
 
-        $('svg.bubble.chart').on('mousemove', function (e) {
+        $('svg.slopegraph.chart').on('mousemove', function (e) {
             var offset,
                 xPos = e.pageX;
             if (that.pageWidth && that.pageWidth < xPos + 396) {
@@ -503,128 +483,75 @@
         this.resize();
     };
 
-    views.Bubbles.prototype.resize = function () {
-        var xAxis, yAxis,
-            elWidth = this.$el.width(),
-            width = elWidth - this.margin.left - this.margin.right,
-            height = 400 - this.margin.top - this.margin.bottom,
-            that = this;
-
-        this.pageWidth = elWidth + 16;
+    views.Lines.prototype.resize = function () {
+        this.width = this.$el.children().first().width() -
+            this.margin.left - this.margin.right;
+        this.height = 400 - this.margin.top - this.margin.bottom,
 
         this.svg
-            .attr('width', width + this.margin.left + this.margin.right)
-            .attr('height', height + this.margin.top + this.margin.bottom);
+            .attr('width', this.width + this.margin.left + this.margin.right)
+            .attr('height', this.height + this.margin.top + this.margin.bottom);
 
-        this.x.range([0, width]);
-        this.y.range([height, 0]);
-
-        xAxis = d3.svg.axis()
-            .scale(this.x)
-            .ticks(width > 800 ? 13 : 6)
-            .tickSize(-height - 20)
-            .orient('bottom');
-
-        yAxis = d3.svg.axis()
-            .scale(this.y)
-            .tickValues([0, 250000, 500000, 750000, 1000000, 1250000, 1500000])
-            .tickFormat(function (d) { return '$' + commasFormatter(d / 1000) + 'K'; })
-            .tickSize(-width - 20)
-            .orient('left');
-
-        this.voronoi = d3.geom.voronoi()
-            .x(function (d) { return that.x(d.atRiskCount); })
-            .y(function (d) { return d.atRiskFunds > MAX ? -10 : that.y(d.atRiskFunds); })
-            .clipExtent([[-20, -20],
-                [width + 20, height + 20]]);
-
-        this.bg.selectAll('.axis').remove();
-        this.bg.selectAll('.guide').remove();
-
-        this.bg.append('g')
-            .attr('class', 'x axis')
-            .attr('transform', 'translate(0,' + (height + 10) + ')')
-            .call(xAxis)
-            .append('text')
-                .attr('class', 'label')
-                .attr('x', width - 5)
-                .attr('y', -16)
-                .style('text-anchor', 'end')
-                .text('# of At-Risk Students');
-
-        this.bg.append('g')
-            .attr('class', 'y axis')
-            .attr('transform', 'translate(-10,0)')
-            .call(yAxis)
-            .append('text')
-                .attr('class', 'label')
-                .attr('transform', 'rotate(-90)')
-                .attr('x', -4)
-                .attr('y', 16)
-                .attr('dy', '.71em')
-                .style('text-anchor', 'end')
-                .text('Total At-Risk Funds');
-
-        this.bg.append('line')
-            .attr('class', 'guide')
-            .attr('x1', this.x(0))
-            .attr('y1', this.y(0))
-            .attr('x2', this.x(650))
-            .attr('y2', this.y(2079 * 650));
-
-        this.bg.append('text')
-            .attr('class', 'guide')
-            .attr('x', this.x(650))
-            .attr('y', this.y(2079 * 650) - 3)
-            .attr("transform", 'rotate(' +
-                (Math.atan(
-                    (this.y(2079 * 650) - this.y(0)) /
-                        (this.x(650) - this.x(0))
-                ) * (180 / Math.PI)) +
-                ' ' + this.x(650) +
-                ' ' + this.y(2079 * 650) +
-                ')')
-            .style('text-anchor', 'end')
-            .text('Funds Allotted Per Student ($2,079)');
+        this.y.range([this.height, 0]);
 
         this.refresh();
     };
 
-    views.Bubbles.prototype.refresh = function () {
-        var bubbles,
-            voronoiPaths,
+    views.Lines.prototype.refresh = function () {
+        var leftAxis, rightAxis, lines,
+            max = _.reduce(_(this.data).values().pluck('values').flatten().value(),
+                function (max, d) {
+                    var maxTotal = Math.max(
+                        d.selected[CURRENT_YEAR].total / d.enrollment[CURRENT_YEAR].total,
+                        d.selected[CURRENT_YEAR - 1].total / d.enrollment[CURRENT_YEAR - 1].total);
+
+                    return maxTotal > max ? Math.ceil(maxTotal / 2000) * 2000 : max;
+                }, 0),
             that = this;
 
-        bubbles = this.fg.selectAll('.bubble')
-            .data(this.data);
+        this.y.domain([0, max]);
 
-        bubbles.enter().append('circle')
-            .attr('class', function (d) { return 'bubble school-' + d.code; })
-            .attr('r', 6)
-            .attr('cy', this.y(0));
+        leftAxis = d3.svg.axis()
+            .scale(this.y)
+            .orient('left')
+            .tickSize(0)
+            .tickValues([0, max / 2, max])
+            .tickFormat(function (d) { return '$' + commasFormatter(d / 1000) + 'K'; }),
+        rightAxis = d3.svg.axis()
+            .scale(this.y)
+            .orient('right')
+            .tickSize(0)
+            .tickFormat("");
 
-        bubbles.attr('cx', function (d) { return that.x(d.atRiskCount); })
-            .transition()
-            .ease('elastic')
-            .duration(900)
-            .delay(function (d) { return d.atRiskCount / 2 + Math.random() * 300; })
-            .attr('r', function (d) { return d.filtered ? 3 : 6; })
-            .attr('cy', function (d) { return d.atRiskFunds > MAX ? -10 : that.y(d.atRiskFunds); })
-            .each('start', function () { d3.select(this).classed('disabled', function (d) { return d.filtered; }); });
+        this.bg.selectAll('.axis').remove();
 
-        voronoiPaths = this.interactionLayer.selectAll('.voronoi')
-            .data(this.voronoi(_.reject(this.data, 'filtered')));
+        this.bg.append('g').attr('class', 'axis').call(leftAxis);
+        this.bg.append('g').attr('class', 'axis').attr("transform","translate(" + this.width + ",0)").call(rightAxis);
 
-        voronoiPaths.enter().append('path')
-            .attr('class', 'voronoi')
-            .on('mouseover', this.mouseover)
-            .on('mouseout', this.mouseout)
-            .on('click', this.click);
+        this.bg.selectAll('.tick text')
+            .style('text-anchor', 'middle')
+            .attr('x', -(this.margin.left + this.margin.right) / 2);
 
-        voronoiPaths.attr('d', function (d) { return 'M' + d.join('L') + 'Z'; })
-            .datum(function (d) { return d.point; });
+        lines = this.fg.selectAll('.line')
+            .data(function (d) { return d.values; });
 
-        voronoiPaths.exit().remove();
+        lines.enter().append('line')
+            .attr('class', 'line')
+            .attr('x1', 0)
+            .attr('x2', this.width);
+
+        lines.classed('filtered', function (d) { return d.filtered; });
+
+        lines.transition()
+            .duration(400)
+            .attr('y1', function (d) {
+                return that.y(d.selected[CURRENT_YEAR - 1].total /
+                    d.enrollment[CURRENT_YEAR - 1].total);
+            })
+            .attr('y2', function (d) {
+                return that.y(d.selected[CURRENT_YEAR].total /
+                    d.enrollment[CURRENT_YEAR].total);
+            });
     };
 
     populateSchoolView = function (schoolView, d) {

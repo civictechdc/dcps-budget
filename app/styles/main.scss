@@ -125,65 +125,48 @@ input[type="radio"] {
 
 #exhibit {
   margin-bottom: 22px;
+  .multiple {
+    width: 25%;
+    float: left;
+    position: relative;
+    .title {
+      position: absolute;
+      text-align: center;
+      left: 42px; right: 2px;
+      bottom: 44px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #545454;
+      font-size: 14px;
+    }
+  }
   .instruction {
     margin-top: -6px;
   }
 }
 
-.bubble.chart {
-  margin-top: -80px;
-
-  .axis path {
-    fill: none;
-  }
-  .axis line {
-    stroke: #a6b1b7;
-  }
-  .axis text {
-    fill: #fff;
-    font-size: 11px;
-    font-weight: 300;
-    &.label {
-      font-size: 14px;
-      font-weight: 700;
+.slopegraph.chart {
+  .axis {
+    path {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2px;
+    }
+    text {
+      fill: #545454;
+      font-size: 11px;
+      font-weight: 300;
     }
   }
-
-  line.guide {
-    fill: none;
-    stroke: #fff;
-    stroke-width: 2px;
-    stroke-linecap: round;
-  }
-
-  text.guide {
-    fill: #fff;
-    text-transform: uppercase;
-    font-weight: 300;
-    font-size: 11px;
-  }
-
-  circle.bubble {
-    fill: #afab6e;
-    fill: rgba(217,193,63,.5);
+  .line {
     stroke: #2b899d;
-    stroke-width: 1px;
-    -webkit-transition: opacity 300ms;
-    -moz-transition: opacity 300ms;
-    -ms-transition: opacity 300ms;
-    -o-transition: opacity 300ms;
-    transition: opacity 300ms;
-    &.highlighted {
-      fill: #2b899d;
-    }
-    &.disabled {
-      opacity: .25;
-    }
-  }
+    stroke-width: 2px;
+    opacity: 0.67;
 
-  path.voronoi {
-    fill: none;
-    pointer-events: all;
+    -webkit-transition: opacity 400ms;
+    transition: opacity 400ms;
+
+    &.filtered { opacity: 0.1; }
   }
 }
 
