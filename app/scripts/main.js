@@ -13,6 +13,17 @@
 
         CURRENT_YEAR = 2016,
 
+        CATEGORIES = {
+            enrollment: 'Enrollment-based funds',
+            specialty: 'Speciality funds',
+            perpupilmin: 'Per-pupil minimum',
+            stabilization: 'Stabilization funds',
+            sped: 'Special education',
+            ell: 'English learners',
+            atrisk: 'At-risk funds',
+            income: 'Income-linked (i.e. Title I)'
+        },
+
         commasFormatter = d3.format(',.0f'),
         schoolCodeFormatter = d3.format('04d');
 
@@ -387,23 +398,23 @@
             .text(d.enrollment[CURRENT_YEAR].atRisk);
         schoolView.selectAll('.field.enrollment')
             .text(d.enrollment[CURRENT_YEAR].total);
-        schoolView.selectAll('.field.atriskfunds')
-            .text('$' + commasFormatter(d.atRiskFunds));
-        schoolView.selectAll('.field.byformulafunds')
-            .text('$' + commasFormatter(d.atRiskCount * 2079));
-        schoolView.selectAll('.field.perstudentfunds')
-            .text('$' + commasFormatter(d.atRiskFunds / d.atRiskCount));
         schoolView.selectAll('a.learndc')
             .attr('href', 'http://learndc.org/schoolprofiles/view?s=' + d.code + '#overview');
 
         budgetLines.selectAll('li').remove();
 
-        _(d.budgetLines).pairs()
-            .filter(function (a) { return a[1] > 0; })
-            .sortBy(function (a) { return -a[1]; })
-            .each(function (a) {
-                budgetLines.append('li')
-                    .html('<span class="amount">$' + commasFormatter(a[1]) + '</span> ' + a[0]);
+        _.forEach({ current: CURRENT_YEAR, previous: CURRENT_YEAR - 1},
+            function (year, key) {
+                var ul = schoolView.selectAll('ul.field.budgetlines.' + key + '-year'),
+                    lines = d.budget[year];
+                
+                _.each(lines, function (line) {
+                    ul.append('li')
+                        .html('<span class="amount">$' +
+                            commasFormatter(line.value / d.enrollment[year].total) +
+                            '</span> ' +
+                            CATEGORIES[line.category]);
+                });
             });
 
         pieChart.selectAll('svg').remove();
