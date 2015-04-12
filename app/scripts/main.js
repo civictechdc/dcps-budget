@@ -308,7 +308,7 @@
                     '<td>' +
                     '<div class="wrapper">' +
                     '<div class="bar">' +
-                    '<%= CURRENT_YEAR + ": " %>' +
+                    '<span class="year"><%= CURRENT_YEAR + ": " %></span>' +
                     '<span class="label">' +
                     '<%= "$" + commasFormatter(selected[CURRENT_YEAR].total / enrollment[CURRENT_YEAR].total) %>' +
                     '</span>' +
@@ -320,7 +320,7 @@
                     '<% }); %>' +
                     '</div>' +
                     '<div class="bar previous-year">' +
-                    '<%= CURRENT_YEAR - 1 + ": " %>' +
+                    '<span class="year"><%= CURRENT_YEAR - 1 + ": " %></span>' +
                     '<span class="label">' +
                     '<%= "$" + commasFormatter(selected[CURRENT_YEAR - 1].total / enrollment[CURRENT_YEAR - 1].total) %>' +
                     '</span>' +

@@ -319,22 +319,29 @@ input[type="radio"] {
     span.rect { background: #fff; }
   }
 
-  // @media screen and (max-width: 767px) {
-  //   td:nth-child(3), th:nth-child(3) {
-  //     display: none;
-  //   }
-  // }
+  @media screen and (max-width: 679px) {
+    span.rect, span.line { display: none }
+  }
 
-  // @media screen and (max-width: 599px) {
-  //   td:nth-child(2), th:nth-child(2) {
-  //     display: none;
-  //   }
-  //   span.rect, span.line { display: none }
-  //   td, th {
-  //     white-space: normal;
-  //     width: 50%;
-  //   }
-  // }
+  @media screen and (max-width: 589px) {
+    td:nth-child(2), th:nth-child(2) {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 479px) {
+    td:last-child, th:last-child {
+      display: none;
+    }
+    div.bar.previous-year, span.year {
+      display: none;
+    }
+    td, th {
+      white-space: normal;
+      width: 50%;
+      height: inherit !important;
+    }
+  }
 }
 
 .tooltip {
