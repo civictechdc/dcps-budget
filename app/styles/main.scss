@@ -344,6 +344,37 @@ input[type="radio"] {
   }
 }
 
+#legend {
+  text-align: center;
+  font-size: 14px;
+  height: 25px;
+  padding-top: 4px;
+  ul {
+    list-style-type: none;
+    margin: 0; padding: 0;
+    @media screen and (max-width: 679px) { display: none; }
+  }
+  &.hidden ul { display: none; }
+  li {
+    display: inline-block;
+    position: relative;
+    margin-left: 30px;
+
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 13px; height: 13px;
+      left: -16px; top: 6px;
+      background: #2b899d;
+    }
+
+    &.specialty:before { background: #3C5366}
+    &.perpupilmin:before { background: #72ADAC}
+    &.stabilization:before { background: #467883}
+  }
+}
+
 .tooltip {
   margin-top: -87px;
   display: none;

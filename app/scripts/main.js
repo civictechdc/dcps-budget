@@ -62,6 +62,8 @@
 
     app = {
         initialize: function (data) {
+            app.globals = {};
+
             $('#loading').fadeOut();
             $('#main').fadeIn();
 
@@ -88,10 +90,17 @@
 
             app.filterData({});
             app.setCategory('gened');
-
             app.loadView('Bars');
 
             $(window).resize(function () { app.view.resize(); });
+
+            function checkLegendVisibility() {
+                if (app.globals.category === 'gened' && app.globals.view === 'Bars') {
+                    $('#legend').removeClass('hidden');
+                } else {
+                    $('#legend').addClass('hidden');
+                }
+            }
 
             $('#views').change(function (e) {
                 app.loadView($(e.target).attr('value'));
@@ -107,14 +116,18 @@
                 });
 
                 app.filterData(filter);
+                checkLegendVisibility();
             });
 
             $('#categories').change(function (e) {
                 app.setCategory($(e.target).attr('value'));
+                checkLegendVisibility();
             });
         },
 
         filterData: function (filter) {
+            app.globals.filter = filter;
+
             var test = _.matches(filter);
 
             _.each(app.data, function (school) {
@@ -125,6 +138,8 @@
         },
 
         setCategory: function (category) {
+            app.globals.category = category;
+
             var includedCategories = category === 'gened' ?
                     ['enrollment', 'specialty', 'perpupilmin', 'stabilization'] :
                     [category],
@@ -172,6 +187,8 @@
         },
 
         loadView: function (view) {
+            app.globals.view = view;
+
             $('#exhibit').empty();
             $('#school-view').hide();
             app.view = new views[view](app.data);
