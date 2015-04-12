@@ -150,21 +150,23 @@
                 };
 
             _.each(app.data, function (school) {
-                school.selected = {}
+                school.selected = {};
                 _.each(school.budget, function (lines, year) {
-                    if (category === 'total') {
-                        var total = _.reduce(lines, sum, 0);
+                    var total, partition, selected;
 
-                        school.selected[year] = {
+                    if (category === 'total') {
+                        total = _.reduce(lines, sum, 0);
+
+                        selected = {
                             lines: [{ category: 'total', value: total }],
                             total: total,
                             fullBudget: total
-                        }
+                        };
                     } else {
-                        var partition = _.partition(lines, function (line) {
+                        partition = _.partition(lines, function (line) {
                             return _.includes(includedCategories, line.category);
-                        }),
-                            selected = {};
+                        });
+                        selected = {};
 
                         selected.lines = partition[0];
                         selected.total = _.reduce(selected.lines, sum, 0);
@@ -173,13 +175,13 @@
                             value: _.reduce(partition[1], sum, 0)
                         });
                         selected.fullBudget = _.reduce(selected.lines, sum, 0);
-
-                        school.selected[year] = selected;
                     }
+
+                    school.selected[year] = selected;
                 });
 
                 school.change = null;
-                if (_.has(school.selected), CURRENT_YEAR - 1) {
+                if (_.has(school.selected, CURRENT_YEAR - 1)) {
                     school.change = school.selected[CURRENT_YEAR].total /
                         school.selected[CURRENT_YEAR - 1].total - 1;
                 }
@@ -336,8 +338,7 @@
 
         this.sort = sort || this.sort;
 
-        var that = this,
-            maxSchool = this.data[0],
+        var maxSchool = this.data[0],
             max = maxSchool.selected[CURRENT_YEAR].fullBudget /
                 maxSchool.enrollment[CURRENT_YEAR].total,
             rows = this.tbody.selectAll('tr.bar')
@@ -376,7 +377,7 @@
                     '<td class="' +
                     '<%= change < 0 ? "negative" : "" %>' +
                     '"><%= (change * 100).toFixed(1) + "%" %></td>',
-                    { 'imports': {
+                { 'imports': {
                         'commasFormatter': commasFormatter,
                         'CURRENT_YEAR': CURRENT_YEAR,
                         'max': max
@@ -514,7 +515,8 @@
                 function (max, d) {
                     var maxTotal = Math.max(
                         d.selected[CURRENT_YEAR].total / d.enrollment[CURRENT_YEAR].total,
-                        d.selected[CURRENT_YEAR - 1].total / d.enrollment[CURRENT_YEAR - 1].total);
+                        d.selected[CURRENT_YEAR - 1].total / d.enrollment[CURRENT_YEAR - 1].total
+                    );
 
                     return maxTotal > max ? Math.ceil(maxTotal / 2000) * 2000 : max;
                 }, 0),
@@ -527,7 +529,7 @@
             .orient('left')
             .tickSize(0)
             .tickValues([0, max / 2, max])
-            .tickFormat(function (d) { return '$' + commasFormatter(d / 1000) + 'K'; }),
+            .tickFormat(function (d) { return '$' + commasFormatter(d / 1000) + 'K'; });
         rightAxis = d3.svg.axis()
             .scale(this.y)
             .orient('right')
@@ -537,7 +539,7 @@
         this.bg.selectAll('.axis').remove();
 
         this.bg.append('g').attr('class', 'axis').call(leftAxis);
-        this.bg.append('g').attr('class', 'axis').attr("transform","translate(" + this.width + ",0)").call(rightAxis);
+        this.bg.append('g').attr('class', 'axis').attr("transform", "translate(" + this.width + ",0)").call(rightAxis);
 
         this.bg.selectAll('.tick text')
             .style('text-anchor', 'middle')
@@ -613,7 +615,7 @@
             function (year, key) {
                 var ul = schoolView.selectAll('ul.field.budgetlines.' + key + '-year'),
                     lines = d.budget[year];
-                
+
                 _.each(lines, function (line) {
                     ul.append('li')
                         .html('<span class="amount">$' +
