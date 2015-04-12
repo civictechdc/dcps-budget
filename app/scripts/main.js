@@ -333,7 +333,9 @@
                     '</div>' +
                     '</div>' +
                     '</td>' +
-                    '<td><%= (change * 100).toFixed(1) + "%" %></td>',
+                    '<td class="' +
+                    '<%= change < 0 ? "negative" : "" %>' +
+                    '"><%= (change * 100).toFixed(1) + "%" %></td>',
                     { 'imports': {
                         'commasFormatter': commasFormatter,
                         'CURRENT_YEAR': CURRENT_YEAR,

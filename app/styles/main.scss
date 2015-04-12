@@ -246,6 +246,9 @@ input[type="radio"] {
           width: 100%;
           position: relative;
         }
+        &.negative {
+          color: #b2274e;
+        }
       }
     }
   }
