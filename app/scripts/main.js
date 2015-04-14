@@ -360,6 +360,7 @@
                     '</span>' +
                     '<% }); %>' +
                     '</div>' +
+                    '<% if (selected[CURRENT_YEAR - 1]) { %>' +
                     '<div class="bar previous-year">' +
                     '<span class="year"><%= CURRENT_YEAR - 1 + ": " %></span>' +
                     '<span class="label">' +
@@ -372,6 +373,7 @@
                     '</span>' +
                     '<% }); %>' +
                     '</div>' +
+                    '<% } %>' +
                     '</div>' +
                     '</td>' +
                     '<td class="' +
