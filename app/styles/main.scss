@@ -139,6 +139,12 @@ input[type="radio"] {
       color: #545454;
       font-size: 14px;
     }
+    @media screen and (max-width: 799px) {
+      width: 50%;
+    }
+    @media screen and (max-width: 399px) {
+      width: 100%;
+    }
   }
   .instruction {
     margin-top: -6px;
