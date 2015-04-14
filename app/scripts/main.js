@@ -15,7 +15,7 @@
 
         CATEGORIES = {
             enrollment: 'Enrollment-based funds',
-            specialty: 'Speciality funds',
+            specialty: 'Specialty funds',
             perpupilmin: 'Per-pupil minimum',
             stabilization: 'Stabilization funds',
             sped: 'Special education',
