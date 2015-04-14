@@ -442,26 +442,11 @@
         this.mouseover = function (d) {
             that.fg.select('.line.school-' + d.code)
                 .classed('highlighted', true);
-
-            var tooltip = d3.select('#tooltip');
-
-            tooltip.selectAll('.field.schoolname')
-                .text(d.name);
-            tooltip.selectAll('.field.current-total')
-                .text('$' + commasFormatter(d.selected[CURRENT_YEAR].total /
-                    d.enrollment[CURRENT_YEAR].total));
-            tooltip.selectAll('.field.previous-total')
-                .text('$' + commasFormatter(d.selected[CURRENT_YEAR - 1].total /
-                    d.enrollment[CURRENT_YEAR - 1].total));
-
-            tooltip.style('display', 'block');
         };
 
         this.mouseout = function (d) {
             that.fg.select('.line.school-' + d.code)
                 .classed('highlighted', false);
-
-            d3.select('#tooltip').style('display', 'none');
         };
 
         this.click = function (d) {
@@ -471,28 +456,6 @@
                 $('#school-view').slideUp();
             });
         };
-
-        $('svg.slopegraph.chart').on('mousemove', function (e) {
-            var offset,
-                xPos = e.pageX;
-            if (that.pageWidth && that.pageWidth < xPos + 396) {
-                offset = xPos + 409 - that.pageWidth;
-
-                $('#tooltip .arrow').css('left', offset > 370 ? 370 : offset);
-                $('#tooltip').css({
-                    'left': '',
-                    'right': 0
-                });
-            } else {
-                offset = xPos - 42;
-
-                $('#tooltip .arrow').css('left', 15);
-                $('#tooltip').css({
-                    'left': offset,
-                    'right': ''
-                });
-            }
-        });
 
         this.resize();
     };
