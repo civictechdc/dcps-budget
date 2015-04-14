@@ -90,7 +90,7 @@
 
             app.filterData({});
             app.setCategory('gened');
-            app.loadView('Lines');
+            app.loadView('Bars');
 
             $(window).resize(function () { app.view.resize(); });
 
@@ -621,7 +621,7 @@
                 _.each(lines, function (line) {
                     ul.append('li')
                         .html('<span class="amount">$' +
-                            commasFormatter(line.value / d.enrollment[year].total) +
+                            commasFormatter(line.value) +
                             '</span> ' +
                             CATEGORIES[line.category]);
                 });

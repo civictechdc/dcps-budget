@@ -44,10 +44,24 @@
       </header>
       <div id="controls">
         <form id="views">
-          <input type="radio" name="view" id="view-slope" value="Lines" checked="checked" />
-          <label for="view-slope">Graphs</label>
-          <input type="radio" name="view" id="view-bars" value="Bars" />
+          <input type="radio" name="view" id="view-bars" value="Bars" checked="checked" />
           <label for="view-bars">Table</label>
+          <input type="radio" name="view" id="view-slope" value="Lines" />
+          <label for="view-slope">Graphs</label>
+        </form>
+        <form id="categories">
+          <input type="radio" name="category" id="category-gened" value="gened" checked="checked" />
+          <label for="category-gened">General Education</label>
+          <input type="radio" name="category" id="category-total" value="total" />
+          <label for="category-total">Total Budget</label>
+<!--      <input type="radio" name="category" id="category-sped" value="sped" />
+          <label for="category-sped">Special Education</label>
+          <input type="radio" name="category" id="category-ell" value="ell" />
+          <label for="category-ell">English Learners</label>
+          <input type="radio" name="category" id="category-atrisk" value="atrisk" />
+          <label for="category-atrisk">At-Risk</label>
+          <input type="radio" name="category" id="category-income" value="income" />
+          <label for="category-income">Income-Linked</label> -->
         </form>
         <form id="filters">
           <input type="radio" name="fortyForty" id="school-all" checked="checked" />
@@ -85,20 +99,6 @@
           <input type="radio" name="level" id="level-campus" value="campus" />
           <label for="level-campus">Education Campus</label>
         </form>
-        <form id="categories">
-          <input type="radio" name="category" id="category-total" value="total" />
-          <label for="category-total">All Funds</label>
-          <input type="radio" name="category" id="category-gened" value="gened" checked="checked" />
-          <label for="category-gened">General Education</label>
-          <input type="radio" name="category" id="category-sped" value="sped" />
-          <label for="category-sped">Special Education</label>
-          <input type="radio" name="category" id="category-ell" value="ell" />
-          <label for="category-ell">English Learners</label>
-          <input type="radio" name="category" id="category-atrisk" value="atrisk" />
-          <label for="category-atrisk">At-Risk</label>
-          <input type="radio" name="category" id="category-income" value="income" />
-          <label for="category-income">Income-Linked</label>
-        </form>
       </div>
       <div id="legend">
         <ul>
@@ -106,6 +106,7 @@
           <li class="specialty">Specialty funds</li>
           <li class="perpupilmin">Per-pupil minimum</li>
           <li class="stabilization">Stabilization funds</li>
+          <li class="other">Non-general education funds</li>
         </ul>
       </div>
       <div id="exhibit"></div>
@@ -125,11 +126,11 @@
             <p><span class="field atriskcount amount"></span> at-risk students</p>
           </div>
           <div class="column">
-            <h4>2016 Per Student Funding</h4>
+            <h4>2016 Budget</h4>
             <ul class="field budgetlines current-year"></ul>
           </div>
           <div class="column">
-            <h4>2015 Per Student Funding</h4>
+            <h4>2015 Budget</h4>
             <ul class="field budgetlines previous-year"></ul>
           </div>
           <a class="learndc button">View on LearnDC</a>
