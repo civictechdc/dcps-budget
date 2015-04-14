@@ -542,8 +542,18 @@
 
         this.bg.selectAll('.axis').remove();
 
-        this.bg.append('g').attr('class', 'axis').call(leftAxis);
-        this.bg.append('g').attr('class', 'axis').attr("transform", "translate(" + this.width + ",0)").call(rightAxis);
+        this.bg.append('g').attr('class', 'axis').call(leftAxis)
+            .append('text').text(CURRENT_YEAR - 1)
+                .attr('class', 'year')
+                .attr('x', 5).attr('y', 15);
+
+        this.bg.append('g').attr('class', 'axis')
+            .attr("transform", "translate(" + this.width + ",0)")
+            .call(rightAxis)
+            .append('text').text(CURRENT_YEAR)
+                .attr('class', 'year')
+                .attr('text-anchor', 'end')
+                .attr('x', -5).attr('y', 15);
 
         this.bg.selectAll('.tick text')
             .style('text-anchor', 'middle')
