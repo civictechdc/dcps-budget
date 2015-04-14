@@ -182,8 +182,10 @@
 
                 school.change = null;
                 if (_.has(school.selected, CURRENT_YEAR - 1)) {
-                    school.change = school.selected[CURRENT_YEAR].total /
-                        school.selected[CURRENT_YEAR - 1].total - 1;
+                    school.change = (school.selected[CURRENT_YEAR].total /
+                            school.enrollment[CURRENT_YEAR].total) /
+                        (school.selected[CURRENT_YEAR - 1].total /
+                            school.enrollment[CURRENT_YEAR - 1].total) - 1;
                 }
             });
 
