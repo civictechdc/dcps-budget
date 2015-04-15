@@ -430,6 +430,9 @@
             .attr('class', 'title')
             .text(function (d) { return labels[d.key]; });
 
+        this.tooltipName = this.multiples.append('span')
+            .attr('class', 'tooltip-name');
+
         this.svg = this.multiples.append('svg')
             .attr('class', 'slopegraph chart');
         this.g = this.svg.append('g')
@@ -437,31 +440,61 @@
 
         this.fg = this.g.append('g');
         this.bg = this.g.append('g');
+        this.tooltipsLayer = this.g.append('g').attr('class', 'tooltips');
         this.interactionLayer = this.g.append('g');
 
         this.mouseover = function (d) {
             that.fg.select('.line.school-' + d.code)
                 .classed('highlighted', true);
 
-            var tooltip = d3.select('#tooltip');
+            var tooltipsLayer = d3.select(this.parentNode.parentNode)
+                    .select('.tooltips'),
+                tooltipName = d3.select(this.parentNode.parentNode.parentNode.parentNode)
+                    .select('.tooltip-name'),
+                prevYearTip = tooltipsLayer.append('g')
+                    .attr('class', 'label')
+                    .attr('transform', 'translate(' + 30 + ',' + (d.y1 - 8) + ')'),
+                currYearTip = tooltipsLayer.append('g')
+                    .attr('class', 'label')
+                    .attr('transform', 'translate(' + (that.width - 30) + ',' + (d.y2 - 8) + ')');
 
-            tooltip.selectAll('.field.schoolname')
-                .text(d.name);
-            tooltip.selectAll('.field.current-total')
-                .text('$' + commasFormatter(d.selected[CURRENT_YEAR].total /
-                    d.enrollment[CURRENT_YEAR].total));
-            tooltip.selectAll('.field.previous-total')
-                .text('$' + commasFormatter(d.selected[CURRENT_YEAR - 1].total /
-                    d.enrollment[CURRENT_YEAR - 1].total));
+            tooltipName.text(d.name);
 
-            tooltip.style('display', 'block');
+            prevYearTip.append('rect')
+                .attr('x', -27)
+                .attr('y', -13)
+                .attr('width', 55)
+                .attr('height', 17)
+                .attr('rx', 3)
+                .attr('ry', 3);
+
+            prevYearTip.append('text')
+                .text('$' + commasFormatter(
+                    d.selected[CURRENT_YEAR - 1].total /
+                        d.enrollment[CURRENT_YEAR - 1].total
+                )).attr('text-anchor', 'middle');
+
+            currYearTip.append('rect')
+                .attr('x', -28)
+                .attr('y', -13)
+                .attr('width', 55)
+                .attr('height', 17)
+                .attr('rx', 3)
+                .attr('ry', 3);
+
+            currYearTip.append('text')
+                .text('$' + commasFormatter(
+                    d.selected[CURRENT_YEAR].total /
+                        d.enrollment[CURRENT_YEAR].total
+                )).attr('text-anchor', 'middle');
         };
 
         this.mouseout = function (d) {
             that.fg.select('.line.school-' + d.code)
                 .classed('highlighted', false);
 
-            d3.select('#tooltip').style('display', 'none');
+            that.tooltipsLayer.selectAll('.label').remove();
+            that.tooltipName.text('');
         };
 
         this.click = function (d) {
@@ -471,28 +504,6 @@
                 $('#school-view').slideUp();
             });
         };
-
-        $('svg.slopegraph.chart').on('mousemove', function (e) {
-            var offset,
-                xPos = e.pageX;
-            if (that.pageWidth && that.pageWidth < xPos + 396) {
-                offset = xPos + 409 - that.pageWidth;
-
-                $('#tooltip .arrow').css('left', offset > 370 ? 370 : offset);
-                $('#tooltip').css({
-                    'left': '',
-                    'right': 0
-                });
-            } else {
-                offset = xPos - 42;
-
-                $('#tooltip .arrow').css('left', 15);
-                $('#tooltip').css({
-                    'left': offset,
-                    'right': ''
-                });
-            }
-        });
 
         this.resize();
     };
@@ -572,12 +583,16 @@
         lines.transition()
             .duration(400)
             .attr('y1', function (d) {
-                return that.y(d.selected[CURRENT_YEAR - 1].total /
+                d.y1 = that.y(d.selected[CURRENT_YEAR - 1].total /
                     d.enrollment[CURRENT_YEAR - 1].total);
+
+                return d.y1;
             })
             .attr('y2', function (d) {
-                return that.y(d.selected[CURRENT_YEAR].total /
+                d.y2 = that.y(d.selected[CURRENT_YEAR].total /
                     d.enrollment[CURRENT_YEAR].total);
+
+                return d.y2;
             });
 
         interactionLines = this.interactionLayer.selectAll('.interaction-line')
@@ -593,12 +608,10 @@
 
         interactionLines
             .attr('y1', function (d) {
-                return that.y(d.selected[CURRENT_YEAR - 1].total /
-                    d.enrollment[CURRENT_YEAR - 1].total);
+                return d.y1;
             })
             .attr('y2', function (d) {
-                return that.y(d.selected[CURRENT_YEAR].total /
-                    d.enrollment[CURRENT_YEAR].total);
+                return d.y2;
             });
 
         interactionLines.exit().remove();

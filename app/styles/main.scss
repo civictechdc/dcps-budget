@@ -139,6 +139,16 @@ input[type="radio"] {
       color: #545454;
       font-size: 14px;
     }
+    .tooltip-name {
+      position: absolute;
+      text-align: center;
+      left: 47px; right: 7px;
+      bottom: 130px;
+      line-height: 1em;
+      font-weight: 700;
+      color: #2b899d;
+      font-size: 14px;
+    }
     @media screen and (max-width: 799px) {
       width: 50%;
     }
@@ -189,6 +199,16 @@ input[type="radio"] {
     stroke-width: 5px;
     stroke: #000;
     opacity: 0;
+  }
+
+  .label {
+    text {
+      font-size: 13px;
+      fill: #e4e5e6;
+    }
+    rect {
+      fill: #545454;
+    }
   }
 }
 
