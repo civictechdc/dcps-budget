@@ -332,9 +332,9 @@ input[type="radio"] {
     display: inline-block;
     height: 11px;
 
-    &.specialty { background: #3C5366}
-    &.perpupilmin { background: #72ADAC}
-    &.stabilization { background: #467883}
+    &.specialty { background: #5c4678}
+    &.perpupilmin { background: #cda51b}
+    &.stabilization { background: #944d27}
     &.other { background: #9aa6a8}
   }
 
@@ -394,9 +394,9 @@ input[type="radio"] {
       background: #2b899d;
     }
 
-    &.specialty:before { background: #3C5366}
-    &.perpupilmin:before { background: #72ADAC}
-    &.stabilization:before { background: #467883}
+    &.specialty:before { background: #5c4678}
+    &.perpupilmin:before { background: #cda51b}
+    &.stabilization:before { background: #944d27}
     &.other:before { background: #9aa6a8}
   }
 }
