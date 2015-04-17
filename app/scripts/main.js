@@ -233,7 +233,7 @@
             .attr('scope', 'col')
             .attr('data-sort', 'enrollment')
             .attr('class', 'descending')
-            .text('2015-2016 Projected Enrollment')
+            .text('2016 Enrollment')
             .append('span')
             .attr('class', 'sort-arrow');
         header.append('th')
