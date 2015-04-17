@@ -14,14 +14,14 @@
         CURRENT_YEAR = 2016,
 
         CATEGORIES = {
-            enrollment: 'Enrollment-based funds',
-            specialty: 'Specialty funds',
-            perpupilmin: 'Per-pupil minimum',
-            stabilization: 'Stabilization funds',
-            sped: 'Special education',
-            ell: 'English learners',
-            atrisk: 'At-risk funds',
-            income: 'Income-linked (i.e. Title I)'
+            enrollment: 'Enrollment-Based Funds',
+            specialty: 'Specialty Funds',
+            perpupilmin: 'Per-Pupil Funding Minimum Funds',
+            stabilization: 'Stabilization Funds',
+            sped: 'Special Education Funds',
+            ell: 'English Language Learner Funds',
+            atrisk: 'At-Risk Funds',
+            income: 'Federal Title and ASP/ECR Funds'
         },
 
         commasFormatter = d3.format(',.0f'),
@@ -233,7 +233,7 @@
             .attr('scope', 'col')
             .attr('data-sort', 'enrollment')
             .attr('class', 'descending')
-            .text('Enrollment')
+            .text('2015-2016 Projected Enrollment')
             .append('span')
             .attr('class', 'sort-arrow');
         header.append('th')
