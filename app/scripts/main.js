@@ -41,19 +41,22 @@
             };
 
             row.budget[d.YEAR] = [
-                { category: "enrollment", value: +d.ENROLLMENTFUNDS },
-                { category: "specialty", value: +d.SPECIALTY },
-                { category: "perpupilmin", value: +d.PERPUPILMIN },
-                { category: "stabilization", value: +d.STABILIZATION },
-                { category: "sped", value: +d.SPED },
-                { category: "ell", value: +d.ELL },
-                { category: "atrisk", value: +d.ATRISK },
-                { category: "income", value: +d.INCOME }
+                { category: "enrollment", value: +d.AMT_ENROLLMENT },
+                { category: "specialty", value: +d.AMT_SPECIALTY },
+                { category: "perpupilmin", value: +d.AMT_PPFM },
+                { category: "stabilization", value: +d.AMT_STABILIZATION },
+                { category: "sped", value: +d.AMT_SPED },
+                { category: "ell", value: +d.AMT_ELL },
+                { category: "atrisk", value: +d.AMT_ATRISK },
+                { category: "income", value: (+d.AMT_TITLE) + (+d.AMT_ASPECR) }
             ];
 
             row.enrollment[d.YEAR] = {
-                total: d.ENROLLMENT === '' ? null : +d.ENROLLMENT,
+                total:  d.TOTALENROLLMENT === '' ? null : +d.TOTALENROLLMENT,
                 atRisk: d.ATRISKENROLLMENT === '' ? null : +d.ATRISKENROLLMENT,
+                sped:   d.SPEDENROLLMENT === '' ? null : +d.SPEDENROLLMENT,
+                ell:    d.ELLENROLLMENT === '' ? null : +d.ELLENROLLMENT,
+                ece:    d.ECEENROLLMENT === '' ? null : +d.ECEENROLLMENT
             };
 
             return row;
@@ -187,6 +190,12 @@
                         (school.selected[CURRENT_YEAR - 1].total /
                             school.enrollment[CURRENT_YEAR - 1].total) - 1;
                 }
+
+                school.enrchange = null;
+                if (_.has(school.selected, CURRENT_YEAR - 1)) {
+                    school.enrchange = ( school.enrollment[CURRENT_YEAR].total / school.enrollment[CURRENT_YEAR - 1].total ) - 1;
+                }
+
             });
 
             if (app.view) { app.view.refresh(); }
@@ -247,7 +256,7 @@
             .attr('scope', 'col')
             .attr('data-sort', 'change')
             .attr('class', 'descending')
-            .text('Change')
+            .text('Change in Funds per Student')
             .append('span')
             .attr('class', 'sort-arrow');
 
@@ -347,7 +356,9 @@
                 .data(_.sortBy(this.data, this.sort)),
             rowTemplate = _.template(
                 '<td><%= name %></td>' +
-                    '<td><%= enrollment[CURRENT_YEAR].total %></td>' +
+                    '<td class="' +
+                    '<%= enrchange < 0 ? "negative" : "" %>"> <font color = "343536">' +
+                    '<%= enrollment[CURRENT_YEAR].total %> </font> <%= "  (" + (enrchange * 100).toFixed(1) + "%)" %></td>' +
                     '<td>' +
                     '<div class="wrapper">' +
                     '<div class="bar">' +
@@ -380,7 +391,7 @@
                     '</td>' +
                     '<td class="' +
                     '<%= change < 0 ? "negative" : "" %>' +
-                    '"><%= (change * 100).toFixed(1) + "%" %></td>',
+                    '"><%= change ? (change * 100).toFixed(1) + "%" : "NA" %></td>',
                 { 'imports': {
                         'commasFormatter': commasFormatter,
                         'CURRENT_YEAR': CURRENT_YEAR,
