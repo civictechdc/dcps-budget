@@ -630,8 +630,10 @@
 
     populateSchoolView = function (schoolView, d) {
         var budgetLines = schoolView.selectAll('ul.field.budgetlines'),
-            pieChart = schoolView.selectAll('div.chart'),
+            pieChart = schoolView.selectAll('div.chart.current-year'),
+            previousPieChart = schoolView.selectAll('div.chart.previous-year'),
             percent = d.enrollment[CURRENT_YEAR].atRisk / d.enrollment[CURRENT_YEAR].total,
+            previousPercent = d.enrollment[CURRENT_YEAR - 1].atRisk / d.enrollment[CURRENT_YEAR - 1].total,
             radius = 35,
             pie = d3.layout.pie().sort(null),
             arc = d3.svg.arc()
@@ -640,9 +642,20 @@
 
         schoolView.selectAll('.field.schoolname')
             .text(d.name);
-        schoolView.selectAll('.field.atriskcount')
+        if (d.enrollment[CURRENT_YEAR - 1]) {
+            schoolView.selectAll('.field.previous-year.atriskcount')
+                .text(d.enrollment[CURRENT_YEAR - 1].atRisk);
+            schoolView.selectAll('.field.previous-year.enrollment')
+                .text(d.enrollment[CURRENT_YEAR - 1].total);
+        } else {
+            schoolView.selectAll('.field.previous-year.atriskcount')
+                .text('0');
+            schoolView.selectAll('.field.previous-year.enrollment')
+                .text('0');
+        }
+        schoolView.selectAll('.field.current-year.atriskcount')
             .text(d.enrollment[CURRENT_YEAR].atRisk);
-        schoolView.selectAll('.field.enrollment')
+        schoolView.selectAll('.field.current-year.enrollment')
             .text(d.enrollment[CURRENT_YEAR].total);
         schoolView.selectAll('a.learndc')
             .attr('href', 'http://learndc.org/schoolprofiles/view?s=' + d.code + '#overview');
@@ -663,47 +676,52 @@
                 });
             });
 
-        pieChart.selectAll('svg').remove();
+        makeapie(previousPieChart, previousPercent);
+        makeapie(pieChart, percent);
 
-        pieChart = pieChart.append('svg')
-            .attr('width', '70px')
-            .attr('height', '70px')
-            .append("g");
+        function makeapie (div, percent) {
+            div.selectAll('svg').remove();
 
-        pieChart.attr('transform', 'translate(' + radius + ',' + radius + ')')
-            .selectAll('.arc')
-            .data(pie([0, 1]))
-            .enter()
-            .append('path')
-            .attr('class', 'arc')
-            .attr('d', function (d) {
-                this._current = d;
-                return arc(d);
-            })
-            .data(pie([percent, 1 - percent]))
-            .transition()
-            .duration(1000 * percent)
-            .attrTween('d', function (d) {
-                var interpolate = d3.interpolate(this._current, d);
-                return function (t) {
-                    return arc(interpolate(t));
-                };
-            });
+            var chart = div.append('svg')
+                .attr('width', '70px')
+                .attr('height', '70px')
+                .append("g");
 
-        pieChart.append('text')
-            .attr('class', 'amount')
-            .attr('y', 5)
-            .style('text-anchor', 'middle')
-            .text('0%')
-            .transition()
-            .duration(1000 * percent)
-            .tween('text', function () {
-                var i = function (t) {
-                    return (percent * t * 100).toFixed(0) + '%';
-                };
+            chart.attr('transform', 'translate(' + radius + ',' + radius + ')')
+                .selectAll('.arc')
+                .data(pie([0, 1]))
+                .enter()
+                .append('path')
+                .attr('class', 'arc')
+                .attr('d', function (d) {
+                    this._current = d;
+                    return arc(d);
+                })
+                .data(pie([percent, 1 - percent]))
+                .transition()
+                .duration(1000 * percent)
+                .attrTween('d', function (d) {
+                    var interpolate = d3.interpolate(this._current, d);
+                    return function (t) {
+                        return arc(interpolate(t));
+                    };
+                });
 
-                return function (t) { this.textContent = i(t); };
-            });
+            chart.append('text')
+                .attr('class', 'amount')
+                .attr('y', 5)
+                .style('text-anchor', 'middle')
+                .text('0%')
+                .transition()
+                .duration(1000 * percent)
+                .tween('text', function () {
+                    var i = function (t) {
+                        return (percent * t * 100).toFixed(0) + '%';
+                    };
+
+                    return function (t) { this.textContent = i(t); };
+                });
+        }
     };
 
 }());
