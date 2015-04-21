@@ -78,7 +78,7 @@
                 return false;
             });
 
-            var partition = _.partition(data, {year: CURRENT_YEAR});
+            var partition = _.partition(_.reject(data,{level: 'other'}), {year: CURRENT_YEAR});
 
             app.data = partition[0];
 
