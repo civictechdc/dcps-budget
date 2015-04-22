@@ -278,6 +278,12 @@ input[type="radio"] {
     }
   }
 
+  span.amount {
+    color: #343536;
+    display: inline-block;
+    width: 33px;
+  }
+
   div.wrapper {
     position: absolute;
     top: 0;
@@ -380,7 +386,7 @@ input[type="radio"] {
   ul {
     list-style-type: none;
     margin: 0 auto; padding: 0;
-    max-width: 960px;
+    max-width: 880px;
     @media screen and (max-width: 679px) { display: none; }
   }
   &.hidden ul { display: none; }
