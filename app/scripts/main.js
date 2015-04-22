@@ -436,7 +436,11 @@
         this.margin = {top: 6, right: 2, bottom: 38, left: 42};
         this.data = d3.nest()
             .key(function (d) { return d.level; })
-            .entries(_.reject(data, { 'level': null }));
+            .entries(_.reject(data, function (school) {
+                return school.level === null ||
+                    !_.has(school.budget, CURRENT_YEAR) ||
+                    !_.has(school.budget, CURRENT_YEAR - 1);
+            }));
         this.data = _.sortBy(this.data, function (level) {
             return _.indexOf(['es', 'ms', 'hs', 'campus'], level.key);
         });
