@@ -98,10 +98,18 @@
             $(window).resize(function () { app.view.resize(); });
 
             function checkLegendVisibility() {
-                if (app.globals.category === 'gened' && app.globals.view === 'Bars') {
+                if (app.globals.view === 'Bars') {
                     $('#legend').removeClass('hidden');
                 } else {
                     $('#legend').addClass('hidden');
+                }
+
+                if (app.globals.category === 'gened') {
+                    $('#legend .other').removeClass('hidden');
+                    $('#legend .extra-category').addClass('hidden');
+                } else {
+                    $('#legend .other').addClass('hidden');
+                    $('#legend .extra-category').removeClass('hidden');
                 }
             }
 
@@ -147,6 +155,8 @@
 
             var includedCategories = category === 'gened' ?
                     ['enrollment', 'specialty', 'perpupilmin', 'stabilization'] :
+                    category === 'total' ?
+                    ['enrollment', 'specialty', 'perpupilmin', 'stabilization', 'sped', 'ell', 'atrisk', 'income'] :
                     [category],
                 sum = function (sum, line) {
                     return sum + line.value;
@@ -157,15 +167,15 @@
                 _.each(school.budget, function (lines, year) {
                     var total, partition, selected;
 
-                    if (category === 'total') {
-                        total = _.reduce(lines, sum, 0);
+                    // if (category === 'total') {
+                    //     total = _.reduce(lines, sum, 0);
 
-                        selected = {
-                            lines: [{ category: 'total', value: total }],
-                            total: total,
-                            fullBudget: total
-                        };
-                    } else {
+                    //     selected = {
+                    //         lines: [{ category: 'total', value: total }],
+                    //         total: total,
+                    //         fullBudget: total
+                    //     };
+                    // } else {
                         partition = _.partition(lines, function (line) {
                             return _.includes(includedCategories, line.category);
                         });
@@ -178,7 +188,7 @@
                             value: _.reduce(partition[1], sum, 0)
                         });
                         selected.fullBudget = _.reduce(selected.lines, sum, 0);
-                    }
+                    // }
 
                     school.selected[year] = selected;
                 });
