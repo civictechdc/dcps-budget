@@ -21,7 +21,8 @@
             sped: 'Special Education Funds',
             ell: 'English Language Learner Funds',
             atrisk: 'At-Risk Funds',
-            income: 'Federal Title and ASP/ECR Funds'
+            income: 'Federal Title and ASP/ECR Funds',
+            other: 'Non-General Education Funds'
         },
 
         commasFormatter = d3.format(',.0f'),
@@ -266,7 +267,7 @@
             .attr('scope', 'col')
             .attr('data-sort', 'change')
             .attr('class', 'descending')
-            .text('Change in Funds per Student')
+            .text('Change')
             .append('span')
             .attr('class', 'sort-arrow');
 
@@ -367,8 +368,8 @@
             rowTemplate = _.template(
                 '<td><%= name %></td>' +
                     '<td class="' +
-                    '<%= enrchange < 0 ? "negative" : "" %>"> <font color = "343536">' +
-                    '<%= enrollment[CURRENT_YEAR].total %> </font> <%= "  (" + (enrchange * 100).toFixed(1) + "%)" %></td>' +
+                    '<%= enrchange < 0 ? "negative" : "" %>"> <span class="amount">' +
+                    '<%= enrollment[CURRENT_YEAR].total %></span> <%= " (" + (enrchange * 100).toFixed(1) + "%)" %></td>' +
                     '<td>' +
                     '<div class="wrapper">' +
                     '<div class="bar">' +
@@ -378,7 +379,7 @@
                     '</span>' +
                     '<% _.each(selected[CURRENT_YEAR].lines, function (line) { %>' +
                     '<span ' +
-                    'class="rect <%= line.category %>" ' +
+                    'class="rect <%= line.category %>" title="<%= prettyCategories[line.category] %>"' +
                     'style="width: <%= (line.value / enrollment[CURRENT_YEAR].total) / max * 100 %>%;">' +
                     '</span>' +
                     '<% }); %>' +
@@ -391,7 +392,7 @@
                     '</span>' +
                     '<% _.each(selected[CURRENT_YEAR - 1].lines, function (line) { %>' +
                     '<span ' +
-                    'class="rect <%= line.category %>" ' +
+                    'class="rect <%= line.category %>" title="<%= prettyCategories[line.category] %>"' +
                     'style="width: <%= (line.value / enrollment[CURRENT_YEAR - 1].total) / max * 100 %>%;">' +
                     '</span>' +
                     '<% }); %>' +
@@ -405,7 +406,8 @@
                 { 'imports': {
                         'commasFormatter': commasFormatter,
                         'CURRENT_YEAR': CURRENT_YEAR,
-                        'max': max
+                        'max': max,
+                        'prettyCategories': CATEGORIES
                     }}
             ),
             rowCount = 0;
