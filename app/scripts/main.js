@@ -648,8 +648,6 @@
         var budgetLines = schoolView.selectAll('ul.field.budgetlines'),
             pieChart = schoolView.selectAll('div.chart.current-year'),
             previousPieChart = schoolView.selectAll('div.chart.previous-year'),
-            percent = d.enrollment[CURRENT_YEAR].atRisk / d.enrollment[CURRENT_YEAR].total,
-            previousPercent = d.enrollment[CURRENT_YEAR - 1].atRisk / d.enrollment[CURRENT_YEAR - 1].total,
             radius = 35,
             pie = d3.layout.pie().sort(null),
             arc = d3.svg.arc()
@@ -663,16 +661,23 @@
                 .text(d.enrollment[CURRENT_YEAR - 1].atRisk);
             schoolView.selectAll('.field.previous-year.enrollment')
                 .text(d.enrollment[CURRENT_YEAR - 1].total);
+            makeapie(previousPieChart,
+                d.enrollment[CURRENT_YEAR - 1].atRisk / d.enrollment[CURRENT_YEAR - 1].total);
         } else {
             schoolView.selectAll('.field.previous-year.atriskcount')
                 .text('0');
             schoolView.selectAll('.field.previous-year.enrollment')
                 .text('0');
+            previousPieChart.selectAll('svg').remove();
         }
+
         schoolView.selectAll('.field.current-year.atriskcount')
             .text(d.enrollment[CURRENT_YEAR].atRisk);
         schoolView.selectAll('.field.current-year.enrollment')
             .text(d.enrollment[CURRENT_YEAR].total);
+        makeapie(pieChart,
+            d.enrollment[CURRENT_YEAR].atRisk / d.enrollment[CURRENT_YEAR].total);
+
         schoolView.selectAll('a.learndc')
             .attr('href', 'http://learndc.org/schoolprofiles/view?s=' + d.code + '#overview');
 
@@ -691,9 +696,6 @@
                             CATEGORIES[line.category]);
                 });
             });
-
-        makeapie(previousPieChart, previousPercent);
-        makeapie(pieChart, percent);
 
         function makeapie (div, percent) {
             div.selectAll('svg').remove();
